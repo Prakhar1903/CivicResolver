@@ -16,11 +16,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import com.example.complaintportal.di.AppContainer
 import com.example.complaintportal.ui.screens.*
 import com.example.complaintportal.ui.screens.admin.*
 import com.example.complaintportal.ui.screens.user.*
 import com.example.complaintportal.ui.viewmodel.*
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> { null }
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -40,6 +49,7 @@ sealed class Screen(val route: String) {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppNavigation(
     navController: NavHostController = rememberNavController(),
@@ -67,10 +77,18 @@ fun AppNavigation(
             }
         }
     } else {
-        NavHost(
-            navController = navController,
-            startDestination = if (authState.isAuthenticated) Screen.Dashboard.route else Screen.Login.route
-        ) {
+        SharedTransitionLayout {
+            CompositionLocalProvider(
+                LocalSharedTransitionScope provides this
+            ) {
+                NavHost(
+                    navController = navController,
+                    startDestination = if (authState.isAuthenticated) Screen.Dashboard.route else Screen.Login.route,
+                    enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) + fadeIn(animationSpec = tween(300)) },
+                    exitTransition = { slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300)) + fadeOut(animationSpec = tween(300)) },
+                    popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300)) + fadeIn(animationSpec = tween(300)) },
+                    popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) + fadeOut(animationSpec = tween(300)) }
+                ) {
             composable(Screen.Login.route) {
                 LoginScreen(
                     viewModel = authViewModel,
@@ -129,30 +147,32 @@ fun AppNavigation(
             }
 
             composable(Screen.Dashboard.route) {
-                if (authState.user?.isAdmin == true) {
-                    AdminDashboardScreen(
-                        viewModel = complaintViewModel,
-                        onNavigateToDetail = { complaintId -> 
-                            if (complaintId == "profile") {
-                                navController.navigate(Screen.Profile.route)
-                            } else {
-                                navController.navigate(Screen.ComplaintDetail.createRoute(complaintId)) 
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
+                    if (authState.user?.isAdmin == true) {
+                        AdminDashboardScreen(
+                            viewModel = complaintViewModel,
+                            onNavigateToDetail = { complaintId -> 
+                                if (complaintId == "profile") {
+                                    navController.navigate(Screen.Profile.route)
+                                } else {
+                                    navController.navigate(Screen.ComplaintDetail.createRoute(complaintId)) 
+                                }
                             }
-                        }
-                    )
-                } else {
-                    UserDashboardScreen(
-                        viewModel = complaintViewModel,
-                        userName = authState.user?.fullName ?: "Citizen",
-                        onNavigateToCreate = { navController.navigate(Screen.CreateComplaint.route) },
-                        onNavigateToDetail = { complaintId -> 
-                            if (complaintId == "profile") {
-                                navController.navigate(Screen.Profile.route)
-                            } else {
-                                navController.navigate(Screen.ComplaintDetail.createRoute(complaintId)) 
+                        )
+                    } else {
+                        UserDashboardScreen(
+                            viewModel = complaintViewModel,
+                            userName = authState.user?.fullName ?: "Citizen",
+                            onNavigateToCreate = { navController.navigate(Screen.CreateComplaint.route) },
+                            onNavigateToDetail = { complaintId -> 
+                                if (complaintId == "profile") {
+                                    navController.navigate(Screen.Profile.route)
+                                } else {
+                                    navController.navigate(Screen.ComplaintDetail.createRoute(complaintId)) 
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
 
@@ -164,36 +184,40 @@ fun AppNavigation(
             }
 
             composable(Screen.CreateComplaint.route) {
-                CreateComplaintScreen(
-                    viewModel = complaintViewModel,
-                    onNavigateBack = { navController.popBackStack() },
-                    onSuccess = {
-                        navController.navigate(Screen.Dashboard.route) {
-                            popUpTo(Screen.Dashboard.route) { inclusive = true }
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
+                    CreateComplaintScreen(
+                        viewModel = complaintViewModel,
+                        onNavigateBack = { navController.popBackStack() },
+                        onSuccess = {
+                            navController.navigate(Screen.Dashboard.route) {
+                                popUpTo(Screen.Dashboard.route) { inclusive = true }
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
 
             composable(
                 route = Screen.ComplaintDetail.route,
                 arguments = listOf(navArgument("complaintId") { type = NavType.StringType })
             ) { backStackEntry ->
-                val complaintId = backStackEntry.arguments?.getString("complaintId") ?: ""
-                if (authState.user?.isAdmin == true) {
-                    AdminComplaintDetailScreen(
-                        viewModel = complaintViewModel,
-                        complaintId = complaintId,
-                        onNavigateBack = { navController.popBackStack() },
-                        onNavigateToChat = { id -> navController.navigate(Screen.Chat.createRoute(id)) }
-                    )
-                } else {
-                    UserComplaintDetailScreen(
-                        viewModel = complaintViewModel,
-                        complaintId = complaintId,
-                        onNavigateBack = { navController.popBackStack() },
-                        onNavigateToChat = { id -> navController.navigate(Screen.Chat.createRoute(id)) }
-                    )
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
+                    val complaintId = backStackEntry.arguments?.getString("complaintId") ?: ""
+                    if (authState.user?.isAdmin == true) {
+                        AdminComplaintDetailScreen(
+                            viewModel = complaintViewModel,
+                            complaintId = complaintId,
+                            onNavigateBack = { navController.popBackStack() },
+                            onNavigateToChat = { id -> navController.navigate(Screen.Chat.createRoute(id)) }
+                        )
+                    } else {
+                        UserComplaintDetailScreen(
+                            viewModel = complaintViewModel,
+                            complaintId = complaintId,
+                            onNavigateBack = { navController.popBackStack() },
+                            onNavigateToChat = { id -> navController.navigate(Screen.Chat.createRoute(id)) }
+                        )
+                    }
                 }
             }
 
@@ -213,4 +237,6 @@ fun AppNavigation(
             }
         }
     }
+}
+}
 }

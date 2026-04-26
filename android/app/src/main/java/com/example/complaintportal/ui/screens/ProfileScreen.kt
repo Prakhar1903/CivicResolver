@@ -83,14 +83,14 @@ fun ProfileScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFF9F9F9),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { 
                     Text(
                         "CivicResolve", 
                         fontWeight = FontWeight.Bold, 
-                        color = Color(0xFF1A1A1A),
+                        color = MaterialTheme.colorScheme.primaryContainer,
                         fontSize = 18.sp
                     ) 
                 },
@@ -102,11 +102,11 @@ fun ProfileScreen(
                             .clip(CircleShape)
                             .background(Color.Transparent)
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color(0xFF1A1A1A))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF9F9F9)
+                    containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.8f)
                 )
             )
         }
@@ -128,8 +128,8 @@ fun ProfileScreen(
                     modifier = Modifier
                         .size(128.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFFE5E7EB))
-                        .border(4.dp, Color(0xFFF9F9F9), CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .border(4.dp, MaterialTheme.colorScheme.background, CircleShape)
                         .align(Alignment.Center)
                         .clickable(enabled = !state.isLoading) { galleryLauncher.launch("image/*") },
                     contentAlignment = Alignment.Center
@@ -146,7 +146,7 @@ fun ProfileScreen(
                             Icons.Default.Person, 
                             contentDescription = null, 
                             modifier = Modifier.size(60.dp), 
-                            tint = Color(0xFF9CA3AF)
+                            tint = MaterialTheme.colorScheme.outline
                         )
                     }
                     
@@ -168,15 +168,15 @@ fun ProfileScreen(
                         .offset(x = (-4).dp, y = (-4).dp)
                         .size(36.dp)
                         .clip(CircleShape)
-                        .background(Color.Black)
-                        .border(2.dp, Color(0xFFF9F9F9), CircleShape)
+                        .background(MaterialTheme.colorScheme.primary)
+                        .border(2.dp, MaterialTheme.colorScheme.background, CircleShape)
                         .clickable { galleryLauncher.launch("image/*") },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         Icons.Default.Edit, 
                         contentDescription = "Edit Profile", 
-                        tint = Color.White, 
+                        tint = MaterialTheme.colorScheme.onPrimary, 
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -186,14 +186,14 @@ fun ProfileScreen(
                 text = user?.fullName ?: "Citizen", 
                 style = MaterialTheme.typography.titleLarge, 
                 fontWeight = FontWeight.Bold, 
-                color = Color(0xFF1A1A1A),
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             
             Text(
                 text = if (user?.isAdmin == true) "System Administrator" else "Citizen Advocate", 
                 style = MaterialTheme.typography.bodyMedium, 
-                color = Color(0xFF494949),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Medium
             )
 
@@ -219,8 +219,8 @@ fun ProfileScreen(
                     .shadow(4.dp, RoundedCornerShape(16.dp)),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB3261E),
-                    contentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
                 ),
                 contentPadding = PaddingValues(0.dp)
             ) {
@@ -248,8 +248,8 @@ fun InfoCard(label: String, value: String) {
             .fillMaxWidth()
             .shadow(elevation = 1.dp, shape = RoundedCornerShape(16.dp), clip = false)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .border(1.dp, Color(0xFFF4F3F3), RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha=0.2f), RoundedCornerShape(16.dp))
             .padding(horizontal = 16.dp, vertical = 14.dp)
     ) {
         Column {
@@ -257,7 +257,7 @@ fun InfoCard(label: String, value: String) {
                 text = label.uppercase(), 
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold, 
-                color = Color(0xFF9CA3AF),
+                color = MaterialTheme.colorScheme.outline,
                 letterSpacing = 0.5.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -265,7 +265,7 @@ fun InfoCard(label: String, value: String) {
                 text = value, 
                 fontSize = 14.sp, 
                 fontWeight = FontWeight.SemiBold, 
-                color = Color(0xFF1A1A1A)
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

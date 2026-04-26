@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -29,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.complaintportal.ui.viewmodel.ComplaintViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.animation.ExperimentalSharedTransitionApi::class)
 @Composable
 fun UserDashboardScreen(
     viewModel: ComplaintViewModel,
@@ -80,8 +82,23 @@ fun UserDashboardScreen(
             )
         },
         floatingActionButton = {
+            val sharedTransitionScope = com.example.complaintportal.ui.navigation.LocalSharedTransitionScope.current
+            val animatedVisibilityScope = com.example.complaintportal.ui.navigation.LocalNavAnimatedVisibilityScope.current
+            
+            var fabModifier: Modifier = Modifier
+            if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+                with(sharedTransitionScope) {
+                    fabModifier = Modifier.sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "fab_to_create"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        resizeMode = androidx.compose.animation.SharedTransitionScope.ResizeMode.ScaleToBounds()
+                    )
+                }
+            }
+
             FloatingActionButton(
                 onClick = onNavigateToCreate,
+                modifier = fabModifier,
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             ) {
@@ -278,8 +295,28 @@ fun UserDashboardScreen(
                                     }
                                 }
                             } else {
-                                items(filteredList) { complaint ->
-                                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                                itemsIndexed(items = filteredList, key = { _, item -> item.id }) { index, complaint ->
+                                    val animatedProgress = remember { androidx.compose.animation.core.Animatable(0f) }
+                                    LaunchedEffect(complaint.id) {
+                                        animatedProgress.animateTo(
+                                            targetValue = 1f,
+                                            animationSpec = androidx.compose.animation.core.tween(
+                                                durationMillis = 300,
+                                                delayMillis = (index % 10) * 50,
+                                                easing = androidx.compose.animation.core.FastOutSlowInEasing
+                                            )
+                                        )
+                                    }
+
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(horizontal = 16.dp)
+                                            .animateItem()
+                                            .graphicsLayer {
+                                                alpha = animatedProgress.value
+                                                translationY = 50f * (1f - animatedProgress.value)
+                                            }
+                                    ) {
                                         ComplaintCard(
                                             complaint = complaint,
                                             isAdmin = false,

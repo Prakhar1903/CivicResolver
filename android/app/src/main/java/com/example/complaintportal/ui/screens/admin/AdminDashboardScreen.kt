@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -266,8 +269,28 @@ fun AdminDashboardScreen(
                                     }
                                 }
                             } else {
-                                items(filteredList) { complaint ->
-                                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                                itemsIndexed(items = filteredList, key = { _, item -> item.id }) { index, complaint ->
+                                    val animatedProgress = remember { Animatable(0f) }
+                                    LaunchedEffect(complaint.id) {
+                                        animatedProgress.animateTo(
+                                            targetValue = 1f,
+                                            animationSpec = tween(
+                                                durationMillis = 300,
+                                                delayMillis = (index % 10) * 50,
+                                                easing = FastOutSlowInEasing
+                                            )
+                                        )
+                                    }
+
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(horizontal = 16.dp)
+                                            .animateItem()
+                                            .graphicsLayer {
+                                                alpha = animatedProgress.value
+                                                translationY = 50f * (1f - animatedProgress.value)
+                                            }
+                                    ) {
                                         ComplaintCard(
                                             complaint = complaint,
                                             isAdmin = true,

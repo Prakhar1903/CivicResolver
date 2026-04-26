@@ -37,7 +37,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.complaintportal.ui.viewmodel.ComplaintViewModel
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.airbnb.lottie.compose.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -54,7 +56,7 @@ import java.io.FileOutputStream
 import java.util.Locale
 import java.util.Objects
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.animation.ExperimentalSharedTransitionApi::class)
 @Composable
 fun CreateComplaintScreen(
     viewModel: ComplaintViewModel,
@@ -70,6 +72,7 @@ fun CreateComplaintScreen(
     var lat by rememberSaveable { mutableStateOf("0.0") }
     var lng by rememberSaveable { mutableStateOf("0.0") }
     var locationMessage by rememberSaveable { mutableStateOf("") }
+    var showConfetti by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     val context = LocalContext.current
@@ -224,7 +227,22 @@ fun CreateComplaintScreen(
         }
     }
 
-    Scaffold(
+    val sharedTransitionScope = com.example.complaintportal.ui.navigation.LocalSharedTransitionScope.current
+    val animatedVisibilityScope = com.example.complaintportal.ui.navigation.LocalNavAnimatedVisibilityScope.current
+    var containerModifier: Modifier = Modifier.fillMaxSize()
+    
+    if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+        with(sharedTransitionScope) {
+            containerModifier = containerModifier.sharedBounds(
+                sharedContentState = rememberSharedContentState(key = "fab_to_create"),
+                animatedVisibilityScope = animatedVisibilityScope,
+                resizeMode = androidx.compose.animation.SharedTransitionScope.ResizeMode.ScaleToBounds()
+            )
+        }
+    }
+
+    Box(modifier = containerModifier) {
+        Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -260,7 +278,9 @@ fun CreateComplaintScreen(
                         val stateReq = userState.toRequestBody("text/plain".toMediaTypeOrNull())
                         val landmarkReq = landmark.toRequestBody("text/plain".toMediaTypeOrNull())
 
-                        viewModel.createComplaint(descReq, latReq, lngReq, cityReq, stateReq, landmarkReq, imagePart, onSuccess)
+                        viewModel.createComplaint(descReq, latReq, lngReq, cityReq, stateReq, landmarkReq, imagePart) {
+                            showConfetti = true
+                        }
                     },
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(16.dp),
@@ -501,6 +521,29 @@ fun CreateComplaintScreen(
             }
 
             Spacer(modifier = Modifier.height(100.dp)) // padding for bottom bar
+        }
+    }
+
+        if (showConfetti) {
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(com.example.complaintportal.R.raw.confetti))
+            val progress by animateLottieCompositionAsState(
+                composition,
+                iterations = 1,
+                isPlaying = true
+            )
+            
+            LottieAnimation(
+                composition = composition,
+                progress = { progress },
+                modifier = Modifier.fillMaxSize()
+            )
+
+            LaunchedEffect(progress) {
+                if (progress == 1f) {
+                    delay(300) // slight delay before navigating
+                    onSuccess()
+                }
+            }
         }
     }
 }

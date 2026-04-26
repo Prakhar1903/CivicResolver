@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.complaintportal.ui.viewmodel.ComplaintViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.animation.ExperimentalSharedTransitionApi::class)
 @Composable
 fun AdminComplaintDetailScreen(
     viewModel: ComplaintViewModel,
@@ -168,11 +168,24 @@ fun AdminComplaintDetailScreen(
                     Column {
                         Box(modifier = Modifier.fillMaxWidth().height(240.dp)) {
                             if (!complaint.beforeImageUrl.isNullOrBlank()) {
+                                val sharedTransitionScope = com.example.complaintportal.ui.navigation.LocalSharedTransitionScope.current
+                                val animatedVisibilityScope = com.example.complaintportal.ui.navigation.LocalNavAnimatedVisibilityScope.current
+                                var imageModifier = Modifier.fillMaxSize().clickable { showZoomDialog = complaint.beforeImageUrl }
+                                
+                                if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+                                    with(sharedTransitionScope) {
+                                        imageModifier = imageModifier.sharedElement(
+                                            rememberSharedContentState(key = "image-${complaint.id}"),
+                                            animatedVisibilityScope = animatedVisibilityScope
+                                        )
+                                    }
+                                }
+
                                 Image(
                                     painter = rememberAsyncImagePainter(complaint.beforeImageUrl),
                                     contentDescription = "Complaint Image",
                                     contentScale = ContentScale.Crop,
-                                    modifier = Modifier.fillMaxSize().clickable { showZoomDialog = complaint.beforeImageUrl }
+                                    modifier = imageModifier
                                 )
                             } else {
                                 Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant), contentAlignment = Alignment.Center) {
@@ -180,27 +193,12 @@ fun AdminComplaintDetailScreen(
                                 }
                             }
                             
-                            val statusColor = when (complaint.status.lowercase()) {
-                                "resolved" -> MaterialTheme.colorScheme.secondaryContainer
-                                "in progress" -> MaterialTheme.colorScheme.tertiaryContainer
-                                else -> MaterialTheme.colorScheme.primaryContainer
-                            }
-                            val onStatusColor = when (complaint.status.lowercase()) {
-                                "resolved" -> MaterialTheme.colorScheme.onSecondaryContainer
-                                "in progress" -> MaterialTheme.colorScheme.onTertiaryContainer
-                                else -> MaterialTheme.colorScheme.onPrimaryContainer
-                            }
-
-                            Box(
+                            com.example.complaintportal.ui.theme.MorphingStatusBadge(
+                                status = complaint.status,
                                 modifier = Modifier
                                     .padding(16.dp)
                                     .align(Alignment.TopEnd)
-                                    .clip(RoundedCornerShape(100))
-                                    .background(statusColor)
-                                    .padding(horizontal = 16.dp, vertical = 6.dp)
-                            ) {
-                                Text(complaint.status.uppercase(), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = onStatusColor)
-                            }
+                            )
                         }
                         
                         Column(modifier = Modifier.padding(24.dp)) {

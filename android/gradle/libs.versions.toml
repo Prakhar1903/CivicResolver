@@ -21,6 +21,7 @@ playServicesLocationVersion = "21.3.0"
 osmdroid = "6.1.20"
 ucrop = "2.2.8"
 mpandroidchart = "v3.1.0"
+lottie = "6.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -56,6 +57,7 @@ moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "mosh
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroid" }
 ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocationVersion" }
 
 [plugins]

@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.ucrop)
     implementation(libs.mpandroidchart)
     implementation(libs.play.services.location)
+    implementation(libs.lottie.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
