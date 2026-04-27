@@ -21,6 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -278,10 +279,20 @@ fun UserDashboardScreen(
                         }
                     }
 
+                    @OptIn(ExperimentalMaterial3Api::class)
+                    val pullToRefreshState = rememberPullToRefreshState()
                     PullToRefreshBox(
                         isRefreshing = isRefreshing,
                         onRefresh = onRefresh,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        state = pullToRefreshState,
+                        indicator = {
+                            CustomPullToRefreshIndicator(
+                                isRefreshing = isRefreshing,
+                                state = pullToRefreshState,
+                                modifier = Modifier.align(Alignment.TopCenter)
+                            )
+                        }
                     ) {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
@@ -295,27 +306,11 @@ fun UserDashboardScreen(
                                     }
                                 }
                             } else {
-                                itemsIndexed(items = filteredList, key = { _, item -> item.id }) { index, complaint ->
-                                    val animatedProgress = remember { androidx.compose.animation.core.Animatable(0f) }
-                                    LaunchedEffect(complaint.id) {
-                                        animatedProgress.animateTo(
-                                            targetValue = 1f,
-                                            animationSpec = androidx.compose.animation.core.tween(
-                                                durationMillis = 300,
-                                                delayMillis = (index % 10) * 50,
-                                                easing = androidx.compose.animation.core.FastOutSlowInEasing
-                                            )
-                                        )
-                                    }
-
+                                itemsIndexed(items = filteredList, key = { _, item -> item.id }) { _, complaint ->
                                     Box(
                                         modifier = Modifier
                                             .padding(horizontal = 16.dp)
                                             .animateItem()
-                                            .graphicsLayer {
-                                                alpha = animatedProgress.value
-                                                translationY = 50f * (1f - animatedProgress.value)
-                                            }
                                     ) {
                                         ComplaintCard(
                                             complaint = complaint,

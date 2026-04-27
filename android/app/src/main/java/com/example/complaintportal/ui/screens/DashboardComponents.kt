@@ -22,7 +22,12 @@ import androidx.compose.material.icons.filled.ImageNotSupported
 import androidx.compose.material.icons.filled.LocationCity
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -353,19 +358,19 @@ fun ComplaintCard(complaint: Complaint, isAdmin: Boolean, onClick: () -> Unit, o
                             var isLiked by remember { mutableStateOf(complaint.rating > 0) }
                             var likeCount by remember { mutableStateOf(complaint.rating) }
                             
-                            AnimatedLikeButton(
-                                isLiked = isLiked,
-                                likeCount = likeCount,
-                                onLikeClick = {
-                                    if (isLiked) {
-                                        likeCount--
-                                        isLiked = false
-                                    } else {
-                                        likeCount++
-                                        isLiked = true
-                                    }
-                                }
-                            )
+//                            AnimatedLikeButton(
+//                                isLiked = isLiked,
+//                                likeCount = likeCount,
+//                                onLikeClick = {
+//                                    if (isLiked) {
+//                                        likeCount--
+//                                        isLiked = false
+//                                    } else {
+//                                        likeCount++
+//                                        isLiked = true
+//                                    }
+//                                }
+//                            )
                         }
                     }
                 }
@@ -388,5 +393,55 @@ fun ComplaintCard(complaint: Complaint, isAdmin: Boolean, onClick: () -> Unit, o
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomPullToRefreshIndicator(
+    isRefreshing: Boolean,
+    state: PullToRefreshState,
+    modifier: Modifier = Modifier
+) {
+    val scaleFraction = if (isRefreshing) 1f else 
+        LinearOutSlowInEasing.transform(state.distanceFraction).coerceIn(0f, 1f)
+
+    val transition = rememberInfiniteTransition(label = "refreshing")
+    val rotation by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "rotation"
+    )
+
+    val color by animateColorAsState(
+        targetValue = if (isRefreshing) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+        label = "color"
+    )
+
+    Box(
+        modifier = modifier
+            .padding(top = 16.dp)
+            .size(48.dp)
+            .graphicsLayer {
+                scaleX = scaleFraction
+                scaleY = scaleFraction
+                alpha = scaleFraction
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Default.Settings,
+            contentDescription = "Refreshing",
+            tint = color,
+            modifier = Modifier
+                .size(36.dp)
+                .graphicsLayer {
+                    rotationZ = if (isRefreshing) rotation else state.distanceFraction * 360f
+                }
+        )
     }
 }
