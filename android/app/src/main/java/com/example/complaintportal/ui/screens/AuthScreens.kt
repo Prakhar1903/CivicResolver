@@ -262,15 +262,15 @@ fun AppLogoIcon() {
 @Composable
 fun FixedHeaderContent(
     modifier: Modifier = Modifier,
-    title: String = "Enjoy the trip\nwith me"
+    title: String = "For a Better\nCommunity"
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(32.dp)
     ) {
-        Spacer(modifier = Modifier.height(60.dp))
-        AppLogoIcon()
+//        Spacer(modifier = Modifier.height(60.dp))
+//        AppLogoIcon()
         Spacer(modifier = Modifier.height(32.dp))
         Text(
             title,
@@ -286,46 +286,7 @@ fun FixedHeaderContent(
 
 // --- Screens ---
 
-@Composable
-fun LandingScreen(
-    onNavigateToLogin: () -> Unit,
-    onNavigateToSignup: () -> Unit
-) {
-    AuthBackground(imageUrl = "https://images.unsplash.com/photo-1589923188900-85dae523342b") {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Spacer(modifier = Modifier.height(60.dp))
-            AppLogoIcon()
-            Spacer(modifier = Modifier.height(40.dp))
-            Text(
-                "Enjoy the trip\nwith me",
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 42.sp,
-                    lineHeight = 50.sp
-                )
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            OrangeButton(
-                text = "Log in",
-                onClick = onNavigateToLogin
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            OrangeButton(
-                text = "Sign in",
-                onClick = onNavigateToSignup,
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-        }
-    }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -366,20 +327,10 @@ fun LoginScreen(
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = 26.sp
+                                fontSize = 32.sp
                             )
                         )
                     }
-                    Image(
-                        painter = rememberAsyncImagePainter("https://i.pravatar.cc/150?u=alice"),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(68.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
-                            .shadow(4.dp, CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
                 }
 
                 Spacer(modifier = Modifier.height(36.dp))
