@@ -93,7 +93,7 @@ fun AuthContainer(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
         shadowElevation = 16.dp
     ) {
@@ -120,7 +120,7 @@ fun UnderlinedAuthTextField(
         Text(
             text = label,
             style = MaterialTheme.typography.labelMedium,
-            color = Color.Gray.copy(alpha = 0.7f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium
         )
@@ -143,13 +143,13 @@ fun UnderlinedAuthTextField(
                 modifier = Modifier.weight(1f),
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 16.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold
                 ),
                 visualTransformation = visualTransformation,
                 keyboardOptions = keyboardOptions,
                 singleLine = true,
-                cursorBrush = Brush.verticalGradient(listOf(Color(0xFFFF8A65), Color(0xFFFF8A65))),
+                cursorBrush = Brush.verticalGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primary)),
                 decorationBox = { innerTextField ->
                     Box(modifier = Modifier.fillMaxWidth()) {
                         innerTextField()
@@ -163,7 +163,7 @@ fun UnderlinedAuthTextField(
         HorizontalDivider(
             modifier = Modifier.padding(top = 4.dp),
             thickness = 1.dp,
-            color = Color(0xFFFF8A65).copy(alpha = 0.4f)
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
         )
     }
 }
@@ -175,8 +175,8 @@ fun OrangeButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     enabled: Boolean = true,
-    containerColor: Color = Color(0xFFFF8A65),
-    contentColor: Color = Color.White
+    containerColor: Color = MaterialTheme.colorScheme.primary,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimary
 ) {
     Button(
         onClick = onClick,
@@ -224,7 +224,7 @@ fun SocialLoginButtons(modifier: Modifier = Modifier) {
 fun SocialCircleButton(
     icon: @Composable () -> Unit,
     onClick: () -> Unit,
-    backgroundColor: Color = Color.White
+    backgroundColor: Color = MaterialTheme.colorScheme.surface
 ) {
     Surface(
         onClick = onClick,
@@ -232,7 +232,7 @@ fun SocialCircleButton(
         color = backgroundColor,
         shadowElevation = 2.dp,
         modifier = Modifier.size(50.dp),
-        border = if (backgroundColor == Color.White) BorderStroke(0.5.dp, Color.LightGray.copy(alpha = 0.5f)) else null
+        border = if (backgroundColor == MaterialTheme.colorScheme.surface) BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)) else null
     ) {
         Box(contentAlignment = Alignment.Center) {
             icon()
@@ -244,7 +244,7 @@ fun SocialCircleButton(
 fun AppLogoIcon() {
     Surface(
         shape = RoundedCornerShape(14.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         modifier = Modifier.size(56.dp),
         shadowElevation = 4.dp
     ) {
@@ -252,7 +252,7 @@ fun AppLogoIcon() {
             Icon(
                 Icons.Rounded.Image,
                 contentDescription = null,
-                tint = Color(0xFFFF8A65),
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(34.dp)
             )
         }
@@ -262,15 +262,15 @@ fun AppLogoIcon() {
 @Composable
 fun FixedHeaderContent(
     modifier: Modifier = Modifier,
-    title: String = "Enjoy the trip\nwith me"
+    title: String = "For a Better\nCommunity"
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(32.dp)
     ) {
-        Spacer(modifier = Modifier.height(60.dp))
-        AppLogoIcon()
+//        Spacer(modifier = Modifier.height(60.dp))
+//        AppLogoIcon()
         Spacer(modifier = Modifier.height(32.dp))
         Text(
             title,
@@ -286,46 +286,7 @@ fun FixedHeaderContent(
 
 // --- Screens ---
 
-@Composable
-fun LandingScreen(
-    onNavigateToLogin: () -> Unit,
-    onNavigateToSignup: () -> Unit
-) {
-    AuthBackground(imageUrl = "https://images.unsplash.com/photo-1589923188900-85dae523342b") {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Spacer(modifier = Modifier.height(60.dp))
-            AppLogoIcon()
-            Spacer(modifier = Modifier.height(40.dp))
-            Text(
-                "Enjoy the trip\nwith me",
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 42.sp,
-                    lineHeight = 50.sp
-                )
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            OrangeButton(
-                text = "Log in",
-                onClick = onNavigateToLogin
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            OrangeButton(
-                text = "Sign in",
-                onClick = onNavigateToSignup,
-                containerColor = Color.White,
-                contentColor = Color(0xFFFF8A65)
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-        }
-    }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -365,29 +326,11 @@ fun LoginScreen(
                             "Welcome back",
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF1A1A1A),
-                                fontSize = 26.sp
-                            )
-                        )
-                        Text(
-                            "Alice", 
-                            style = MaterialTheme.typography.headlineMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF1A1A1A),
-                                fontSize = 26.sp
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 32.sp
                             )
                         )
                     }
-                    Image(
-                        painter = rememberAsyncImagePainter("https://i.pravatar.cc/150?u=alice"),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(68.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, Color.White, CircleShape)
-                            .shadow(4.dp, CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
                 }
 
                 Spacer(modifier = Modifier.height(36.dp))
@@ -396,21 +339,21 @@ fun LoginScreen(
                     value = email,
                     onValueChange = { email = it },
                     label = "Email",
-                    leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = Color.Gray.copy(alpha = 0.6f)) }
+                    leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) }
                 )
 
                 UnderlinedAuthTextField(
                     value = password,
                     onValueChange = { password = it },
                     label = "Password",
-                    leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = Color.Gray.copy(alpha = 0.6f)) },
+                    leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) },
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(
                                 if (passwordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
                                 contentDescription = null,
-                                tint = Color.Gray.copy(alpha = 0.6f),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -421,7 +364,7 @@ fun LoginScreen(
                     TextButton(onClick = onNavigateToForgotPassword) {
                         Text(
                             "Forgot Password?", 
-                            color = Color(0xFFFF8A65), 
+                            color = MaterialTheme.colorScheme.primary, 
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
@@ -442,7 +385,7 @@ fun LoginScreen(
                     "or sign in with",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 13.sp
                 )
 
@@ -451,7 +394,7 @@ fun LoginScreen(
                 if (state.error != null) {
                     Text(
                         state.error!!,
-                        color = Color.Red,
+                        color = MaterialTheme.colorScheme.error,
                         fontSize = 13.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
@@ -465,10 +408,10 @@ fun LoginScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("New here? ", color = Color.Gray, fontSize = 14.sp)
+                    Text("New here? ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                     Text(
                         "Create Account",
-                        color = Color(0xFFFF8A65),
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
                         modifier = Modifier.clickable { onNavigateToSignup() }
@@ -533,7 +476,7 @@ fun SignupScreen(
                         "New\nAccount",
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1A1A1A),
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 28.sp,
                             lineHeight = 34.sp
                         )
@@ -546,24 +489,24 @@ fun SignupScreen(
                     value = email,
                     onValueChange = { email = it },
                     label = "Email",
-                    leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = Color.Gray.copy(alpha = 0.6f)) }
+                    leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) }
                 )
 
                 UnderlinedAuthTextField(
                     value = fullName,
                     onValueChange = { fullName = it },
                     label = "Username",
-                    leadingIcon = { Icon(Icons.Rounded.Person, contentDescription = null, tint = Color.Gray.copy(alpha = 0.6f)) }
+                    leadingIcon = { Icon(Icons.Rounded.Person, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) }
                 )
 
                 UnderlinedAuthTextField(
                     value = address,
                     onValueChange = { address = it },
                     label = "Address / Location",
-                    leadingIcon = { Icon(Icons.Rounded.LocationOn, contentDescription = null, tint = Color.Gray.copy(alpha = 0.6f)) },
+                    leadingIcon = { Icon(Icons.Rounded.LocationOn, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) },
                     trailingIcon = {
                         if (isFetchingLocation) {
-                            CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp, color = Color(0xFFFF8A65))
+                            CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.primary)
                         } else {
                             IconButton(onClick = {
                                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -576,7 +519,7 @@ fun SignupScreen(
                                     locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
                                 }
                             }) {
-                                Icon(Icons.Rounded.MyLocation, contentDescription = "Get Location", tint = Color(0xFFFF8A65), modifier = Modifier.size(20.dp))
+                                Icon(Icons.Rounded.MyLocation, contentDescription = "Get Location", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                             }
                         }
                     }
@@ -586,14 +529,14 @@ fun SignupScreen(
                     value = password,
                     onValueChange = { password = it },
                     label = "Password",
-                    leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = Color.Gray.copy(alpha = 0.6f)) },
+                    leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) },
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(
                                 if (passwordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
                                 contentDescription = null,
-                                tint = Color.Gray.copy(alpha = 0.6f),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -618,7 +561,7 @@ fun SignupScreen(
                 if (state.error != null) {
                     Text(
                         state.error!!,
-                        color = Color.Red,
+                        color = MaterialTheme.colorScheme.error,
                         fontSize = 13.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
@@ -632,10 +575,10 @@ fun SignupScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Already have an account? ", color = Color.Gray, fontSize = 14.sp)
+                    Text("Already have an account? ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                     Text(
                         "Sign In",
-                        color = Color(0xFFFF8A65),
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
                         modifier = Modifier.clickable { onNavigateToLogin() }
@@ -687,14 +630,14 @@ fun ForgotPasswordScreen(
                         Text(
                             text = "Enter your email address to receive a password reset OTP.",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 24.dp)
                         )
                         UnderlinedAuthTextField(
                             value = email,
                             onValueChange = { email = it },
                             label = "Email Address",
-                            leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = Color.Gray) },
+                            leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                         )
                         Spacer(modifier = Modifier.height(32.dp))
@@ -716,14 +659,14 @@ fun ForgotPasswordScreen(
                         Text(
                             text = "Enter the verification code sent to $email",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 24.dp)
                         )
                         UnderlinedAuthTextField(
                             value = otp,
                             onValueChange = { otp = it },
                             label = "Verification Code",
-                            leadingIcon = { Icon(Icons.Rounded.LockOpen, contentDescription = null, tint = Color.Gray) },
+                            leadingIcon = { Icon(Icons.Rounded.LockOpen, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
                         Spacer(modifier = Modifier.height(32.dp))
@@ -746,20 +689,20 @@ fun ForgotPasswordScreen(
                         Text(
                             text = "Create a strong new password for your account.",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 24.dp)
                         )
                         UnderlinedAuthTextField(
                             value = newPassword,
                             onValueChange = { newPassword = it },
                             label = "New Password",
-                            leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = Color.Gray) },
+                            leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                             trailingIcon = {
                                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                     Icon(
                                         if (passwordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
                                         contentDescription = null,
-                                        tint = Color.Gray
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             },
@@ -769,7 +712,7 @@ fun ForgotPasswordScreen(
                             value = confirmPassword,
                             onValueChange = { confirmPassword = it },
                             label = "Confirm Password",
-                            leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = Color.Gray) },
+                            leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                             visualTransformation = PasswordVisualTransformation()
                         )
                         Spacer(modifier = Modifier.height(32.dp))
@@ -793,7 +736,7 @@ fun ForgotPasswordScreen(
                 if (state.error != null) {
                     Text(
                         state.error!!,
-                        color = Color.Red,
+                        color = MaterialTheme.colorScheme.error,
                         fontSize = 12.sp,
                         modifier = Modifier.padding(top = 16.dp)
                     )
@@ -846,20 +789,20 @@ fun OtpVerifyScreen(
                     imageVector = Icons.Rounded.VerifiedUser,
                     contentDescription = null,
                     modifier = Modifier.size(64.dp).align(Alignment.CenterHorizontally),
-                    tint = Color(0xFFFF8A65)
+                    tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Check your email",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Text(
                     text = "We sent a 6-digit verification code to $email",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 8.dp)
                 )
@@ -870,7 +813,7 @@ fun OtpVerifyScreen(
                     value = otp,
                     onValueChange = { otp = it },
                     label = "Verification Code",
-                    leadingIcon = { Icon(Icons.Rounded.LockOpen, contentDescription = null, tint = Color.Gray) },
+                    leadingIcon = { Icon(Icons.Rounded.LockOpen, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
@@ -895,7 +838,7 @@ fun OtpVerifyScreen(
                 if (state.error != null) {
                     Text(
                         state.error!!,
-                        color = Color.Red,
+                        color = MaterialTheme.colorScheme.error,
                         fontSize = 12.sp,
                         modifier = Modifier.padding(top = 16.dp)
                     )
@@ -907,7 +850,7 @@ fun OtpVerifyScreen(
                     onClick = { viewModel.sendOtp(email) {} },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
-                    Text("Resend Code", color = Color(0xFFFF8A65), fontWeight = FontWeight.Bold)
+                    Text("Resend Code", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 }
             }
         }
