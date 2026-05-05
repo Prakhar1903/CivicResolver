@@ -212,7 +212,7 @@ fun ComplaintCard(
                     Column {
                         if (showCommunityFeatures) {
                             Text(
-                                text = "Citizen in ${complaint.city}",
+                                text = "Citizen in ${complaint.city.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}",
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary.copy(alpha=0.7f),
@@ -220,7 +220,7 @@ fun ComplaintCard(
                             )
                         }
                         Text(
-                            text = complaint.category,
+                            text = complaint.category.replace("_", " ").replaceFirstChar { it.uppercase() },
                             style = MaterialTheme.typography.titleMedium.copy(fontSize = 16.sp),
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -253,7 +253,7 @@ fun ComplaintCard(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "${complaint.city}, ${complaint.state}",
+                                    text = "${complaint.city.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}, ${complaint.state.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}",
                                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                                     color = MaterialTheme.colorScheme.outline,
                                     maxLines = 1,
@@ -261,26 +261,26 @@ fun ComplaintCard(
                                 )
                             }
                             if (showCommunityFeatures) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .background(androidx.compose.ui.graphics.Color(0xFFFFEBEE), RoundedCornerShape(6.dp)) // Light pink background
-                                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.LocationOn,
-                                        contentDescription = null,
-                                        tint = androidx.compose.ui.graphics.Color(0xFFE57373), // Reddish icon
-                                        modifier = Modifier.size(10.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(2.dp))
-                                    Text(
-                                        text = "${(100..900).random()}m away",
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
-                                        fontWeight = FontWeight.ExtraBold,
-                                        color = androidx.compose.ui.graphics.Color(0xFFE57373) // Reddish text
-                                    )
-                                }
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier
+                                            .background(androidx.compose.ui.graphics.Color(0xFF7ECFC0).copy(alpha = 0.15f), RoundedCornerShape(6.dp))
+                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.LocationOn,
+                                            contentDescription = null,
+                                            tint = androidx.compose.ui.graphics.Color(0xFF7ECFC0),
+                                            modifier = Modifier.size(10.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(2.dp))
+                                        Text(
+                                            text = "${(100..900).random()}m away",
+                                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = androidx.compose.ui.graphics.Color(0xFF7ECFC0)
+                                        )
+                                    }
                             }
                         }
                         

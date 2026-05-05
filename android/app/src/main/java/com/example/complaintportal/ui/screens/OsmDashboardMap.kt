@@ -153,7 +153,7 @@ fun OsmDashboardMap(
                     
                     val marker = Marker(mv)
                     marker.position = GeoPoint(lat, lng)
-                    marker.title = complaint.category
+                    marker.title = complaint.category.replace("_", " ").replaceFirstChar { it.uppercase() }
                     marker.snippet = "${complaint.city}, ${complaint.state}"
                     
                     val markerColor = when (complaint.status.lowercase()) {
@@ -254,7 +254,7 @@ fun OsmDashboardMap(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = complaint.category,
+                                text = complaint.category.replace("_", " ").replaceFirstChar { it.uppercase() },
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.ExtraBold
                             )
