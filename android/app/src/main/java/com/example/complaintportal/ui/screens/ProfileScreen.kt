@@ -34,15 +34,15 @@ import java.io.File
 import java.io.FileOutputStream
 
 // ── Colors (matches your app theme) ──────────────────────────────────────────
-private val NavyPrimary   = Color(0xFF1A3A6E)
-private val NavyDark      = Color(0xFF0D2247)
-private val TealAccent    = Color(0xFF7ECFC0)
-private val BgLight       = Color(0xFFF2F4F8)
-private val CardWhite     = Color(0xFFFFFFFF)
-private val TextPrimary   = Color(0xFF0D2247)
-private val TextSecondary = Color(0xFF6A7F9A)
-private val DangerRed     = Color(0xFFE53935)
-private val DividerColor  = Color(0xFFE8EDF5)
+private val NavyPrimary   @Composable get() = MaterialTheme.colorScheme.primary
+private val NavyDark      @Composable get() = MaterialTheme.colorScheme.onPrimaryContainer
+private val TealAccent    @Composable get() = MaterialTheme.colorScheme.secondary
+private val BgLight       @Composable get() = MaterialTheme.colorScheme.background
+private val CardWhite     @Composable get() = MaterialTheme.colorScheme.surface
+private val TextPrimary   @Composable get() = MaterialTheme.colorScheme.onSurface
+private val TextSecondary @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
+private val DangerRed     @Composable get() = MaterialTheme.colorScheme.error
+private val DividerColor  @Composable get() = MaterialTheme.colorScheme.outlineVariant
 
 // ── Data classes ──────────────────────────────────────────────────────────────
 data class UserProfile(
@@ -164,11 +164,6 @@ fun ProfileScreen(
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = NavyPrimary)
                     }
                 },
-                actions = {
-                    IconButton(onClick = { galleryLauncher.launch("image/*") }) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit", tint = NavyPrimary)
-                    }
-                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = BgLight),
             )
         },
@@ -241,20 +236,6 @@ fun ProfileScreen(
                     },
                 )
                 SectionDivider()
-                ToggleRow(
-                    icon     = Icons.Outlined.DarkMode,
-                    label    = "Dark Mode",
-                    checked  = darkEnabled,
-                    onToggle = {
-                        darkEnabled = it
-                    },
-                )
-                SectionDivider()
-                ActionRow(
-                    icon    = Icons.Outlined.Lock,
-                    label   = "Change Password",
-                    onClick = { /* onChangePassword */ },
-                )
             }
 
             Spacer(Modifier.height(20.dp))
@@ -272,27 +253,13 @@ fun ProfileScreen(
                 Icon(
                     Icons.Default.Logout,
                     contentDescription = null,
-                    tint   = Color.White,
+                    tint   = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(18.dp),
                 )
                 Spacer(Modifier.width(8.dp))
-                Text("Logout", color = Color.White, fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                Text("Logout", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Medium, fontSize = 15.sp)
             }
 
-            Spacer(Modifier.height(12.dp))
-
-            // ── Delete account ────────────────────────────────────────────────
-            TextButton(
-                onClick  = { showDeleteDialog = true },
-                modifier = Modifier.padding(bottom = 8.dp),
-            ) {
-                Text(
-                    "Delete Account",
-                    color    = DangerRed,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
 
             Spacer(Modifier.height(24.dp))
         }
@@ -315,19 +282,6 @@ fun ProfileScreen(
         )
     }
 
-    // ── Delete account confirmation dialog ────────────────────────────────────
-    if (showDeleteDialog) {
-        CivicAlertDialog(
-            icon        = Icons.Default.DeleteForever,
-            iconColor   = DangerRed,
-            title       = "Delete Account?",
-            message     = "This will permanently delete your account and all your reports. This cannot be undone.",
-            confirmText = "Delete",
-            confirmColor = DangerRed,
-            onConfirm   = { showDeleteDialog = false },
-            onDismiss   = { showDeleteDialog = false },
-        )
-    }
 }
 
 // ── Avatar section ────────────────────────────────────────────────────────────
@@ -366,7 +320,7 @@ private fun AvatarSection(
                 } else {
                     Text(
                         text       = initials,
-                        color      = Color.White,
+                        color      = MaterialTheme.colorScheme.onPrimary,
                         fontSize   = 32.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -381,7 +335,7 @@ private fun AvatarSection(
                     ) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp),
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             strokeWidth = 2.dp
                         )
                     }
@@ -395,14 +349,14 @@ private fun AvatarSection(
                     .size(30.dp)
                     .clip(CircleShape)
                     .background(TealAccent)
-                    .border(2.dp, Color.White, CircleShape)
+                    .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
                     .clickable { onEditClick() }
                     .offset(x = (-4).dp, y = (-4).dp),
             ) {
                 Icon(
                     Icons.Default.Edit,
                     contentDescription = "Edit profile",
-                    tint     = Color.White,
+                    tint     = MaterialTheme.colorScheme.onSecondary,
                     modifier = Modifier.size(14.dp),
                 )
             }
@@ -622,9 +576,9 @@ private fun ToggleRow(
             checked         = checked,
             onCheckedChange = onToggle,
             colors          = SwitchDefaults.colors(
-                checkedThumbColor   = Color.White,
+                checkedThumbColor   = MaterialTheme.colorScheme.onPrimary,
                 checkedTrackColor   = NavyPrimary,
-                uncheckedThumbColor = Color.White,
+                uncheckedThumbColor = MaterialTheme.colorScheme.surface,
                 uncheckedTrackColor = TextSecondary.copy(alpha = 0.3f),
             ),
         )

@@ -208,79 +208,80 @@ fun UserDashboardScreen(
                 enter   = androidx.compose.animation.fadeIn() + androidx.compose.animation.expandVertically(),
                 exit    = androidx.compose.animation.fadeOut() + androidx.compose.animation.shrinkVertically(),
             ) {
-            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Hi, ", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(displayUserName, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.ExtraBold)
-                    Text(" 👋", style = MaterialTheme.typography.headlineSmall)
-                }
-                if (district != null) {
-                    val annotatedString = buildAnnotatedString {
-                        append("Connected to ")
-                        withStyle(SpanStyle(fontWeight = FontWeight.ExtraBold)) {
-                            append(district)
-                        }
-                        append(" Civic Portal")
-                    }
-                    Text(
-                        text = annotatedString,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(top = 2.dp)
-                    )
-                }
-            }
-
-            
-                Card(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                        .clickable { 
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            selectedTab = 1 // Switch to Community Hub
-                            coroutineScope.launch { pagerState.animateScrollToPage(2) } // Switch to Resolved
-                        },
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    shape = RoundedCornerShape(20.dp)
-                ) {
-                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(44.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
-                            contentAlignment = Alignment.Center
+                Column {
+                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(Icons.Default.Verified, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
+                            Text("Hi, ", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(displayUserName, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.ExtraBold)
+                            Text(" 👋", style = MaterialTheme.typography.headlineSmall)
                         }
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Column(modifier = Modifier.weight(1f)) {
-                            val resolvedCount = if (selectedTab == 1) state.communityResolvedCount else state.resolvedComplaints.size
-                            val scopeLabel = if (selectedTab == 1) {
-                                if (communityTabScope == 0 && district != null) "in ${district.split(" ").first()}" else "nationwide"
-                            } else "you resolved"
-                            
-                            val bannerTitle = when (resolvedCount) {
-                                0 -> "Report your first issue to get started!"
-                                1 -> "1 issue resolved. Great start!"
-                                else -> String.format("%,d issues %s 🎉", resolvedCount, scopeLabel)
+                        if (district != null) {
+                            val annotatedString = buildAnnotatedString {
+                                append("Connected to ")
+                                withStyle(SpanStyle(fontWeight = FontWeight.ExtraBold)) {
+                                    append(district)
+                                }
+                                append(" Civic Portal")
                             }
-
                             Text(
-                                text = bannerTitle, 
-                                style = MaterialTheme.typography.titleSmall, 
-                                fontWeight = FontWeight.Bold, 
-                                color = MaterialTheme.colorScheme.primary
+                                text = annotatedString,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(top = 2.dp)
                             )
-                            Text("Your community is improving.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-                        Icon(Icons.Default.ChevronRight, contentDescription = "Analytics", tint = MaterialTheme.colorScheme.primary.copy(alpha=0.4f))
+                    }
+
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                            .clickable { 
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                selectedTab = 1 // Switch to Community Hub
+                                coroutineScope.launch { pagerState.animateScrollToPage(2) } // Switch to Resolved
+                            },
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                        shape = RoundedCornerShape(20.dp)
+                    ) {
+                        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(44.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(Icons.Default.Verified, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
+                            }
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                val resolvedCount = if (selectedTab == 1) state.communityResolvedCount else state.resolvedComplaints.size
+                                val scopeLabel = if (selectedTab == 1) {
+                                    if (communityTabScope == 0 && district != null) "in ${district.split(" ").first()}" else "nationwide"
+                                } else "you resolved"
+                                
+                                val bannerTitle = when (resolvedCount) {
+                                    0 -> "Report your first issue to get started!"
+                                    1 -> "1 issue resolved. Great start!"
+                                    else -> String.format("%,d issues %s 🎉", resolvedCount, scopeLabel)
+                                }
+
+                                Text(
+                                    text = bannerTitle, 
+                                    style = MaterialTheme.typography.titleSmall, 
+                                    fontWeight = FontWeight.Bold, 
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Text("Your community is improving.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            Icon(Icons.Default.ChevronRight, contentDescription = "Analytics", tint = MaterialTheme.colorScheme.primary.copy(alpha=0.4f))
+                        }
                     }
                 }
             }

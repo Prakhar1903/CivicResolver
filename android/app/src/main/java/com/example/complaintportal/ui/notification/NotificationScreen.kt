@@ -30,12 +30,12 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 // ── Theme colors (matched to app's NavyPrimary/TealAccent palette) ────────────
-private val NavyPrimary = Color(0xFF1A3A6E)
-private val BgLight     = Color(0xFFF2F4F8)
-private val CardWhite   = Color(0xFFFFFFFF)
-private val TextPrimary = Color(0xFF0D2247)
-private val TextSecond  = Color(0xFF6A7F9A)
-private val UnreadBg    = Color(0xFFEEF4FF)
+private val NavyPrimary @Composable get() = MaterialTheme.colorScheme.primary
+private val BgLight     @Composable get() = MaterialTheme.colorScheme.background
+private val CardWhite   @Composable get() = MaterialTheme.colorScheme.surface
+private val TextPrimary @Composable get() = MaterialTheme.colorScheme.onSurface
+private val TextSecond  @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
+private val UnreadBg    @Composable get() = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
 
 // ── Bell icon with animated red badge — drop into any TopBar ─────────────────
 @Composable
