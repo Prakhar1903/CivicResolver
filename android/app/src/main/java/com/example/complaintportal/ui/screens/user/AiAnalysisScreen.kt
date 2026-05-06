@@ -23,17 +23,7 @@ import kotlinx.coroutines.delay
 import androidx.compose.ui.res.stringResource
 import com.example.complaintportal.R
 
-// ── Colors ────────────────────────────────────────────────────────────────────
-private val NavyPrimary   = Color(0xFF1A3A6E)
-private val NavyDark      = Color(0xFF0D2247)
-private val TealAccent    = Color(0xFF7ECFC0)
-private val BgLight       = Color(0xFFF2F4F8)
-private val CardWhite     = Color(0xFFFFFFFF)
-private val TextPrimary   = Color(0xFF0D2247)
-private val TextSecondary = Color(0xFF6A7F9A)
-private val GreenSuccess  = Color(0xFF1D9E75)
-private val DangerRed     = Color(0xFFE53935)
-private val DividerColor  = Color(0xFFE8EDF5)
+// Colors removed for MaterialTheme migration
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 val issueCategories = listOf(
@@ -84,7 +74,7 @@ fun AiAnalysisFlow(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(BgLight),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center,
     ) {
         AnimatedContent(
@@ -150,14 +140,14 @@ fun ErrorMessage(message: String) {
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(DangerRed.copy(alpha = 0.1f))
-            .border(1.dp, DangerRed.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.error.copy(alpha = 0.1f))
+            .border(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Icon(Icons.Default.Error, contentDescription = null, tint = DangerRed, modifier = Modifier.size(20.dp))
-        Text(message, color = DangerRed, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+        Icon(Icons.Default.Error, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(20.dp))
+        Text(message, color = MaterialTheme.colorScheme.error, fontSize = 13.sp, fontWeight = FontWeight.Medium)
     }
 }
 
@@ -168,10 +158,10 @@ fun AiSubmittingScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        CircularProgressIndicator(color = NavyPrimary, modifier = Modifier.size(48.dp))
+        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(48.dp))
         Spacer(Modifier.height(24.dp))
-        Text(stringResource(R.string.uploading_your_report), fontWeight = FontWeight.Bold, color = TextPrimary)
-        Text(stringResource(R.string.this_will_only_take_a_moment), color = TextSecondary, fontSize = 13.sp)
+        Text(stringResource(R.string.uploading_your_report), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+        Text(stringResource(R.string.this_will_only_take_a_moment), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
     }
 }
 
@@ -216,14 +206,14 @@ fun AiLoadingScreen(onCancel: () -> Unit) {
                     .size(120.dp)
                     .scale(pulseScale)
                     .clip(CircleShape)
-                    .background(NavyPrimary.copy(alpha = 0.06f * pulseAlpha))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.06f * pulseAlpha))
             )
             // Middle ring
             Box(
                 modifier = Modifier
                     .size(90.dp)
                     .clip(CircleShape)
-                    .background(NavyPrimary.copy(alpha = 0.10f))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f))
             )
             // Icon box
             Box(
@@ -232,7 +222,7 @@ fun AiLoadingScreen(onCancel: () -> Unit) {
                     .size(64.dp)
                     .clip(CircleShape)
                     .background(
-                        Brush.linearGradient(listOf(NavyPrimary, Color(0xFF1A5C9E)))
+                        Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primaryContainer))
                     ),
             ) {
                 Text(stringResource(R.string.str_1), fontSize = 28.sp)
@@ -245,7 +235,7 @@ fun AiLoadingScreen(onCancel: () -> Unit) {
             text       = "Analyzing your image" + ".".repeat(dotCount),
             fontSize   = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color      = TextPrimary,
+            color      = MaterialTheme.colorScheme.onSurface,
         )
 
         Spacer(Modifier.height(8.dp))
@@ -253,7 +243,7 @@ fun AiLoadingScreen(onCancel: () -> Unit) {
         Text(
             text      = "Our AI is identifying the civic issue\nin your photo",
             fontSize  = 13.sp,
-            color     = TextSecondary,
+            color     = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             lineHeight = 20.sp,
         )
@@ -272,21 +262,21 @@ fun AiLoadingScreen(onCancel: () -> Unit) {
                 .width(200.dp)
                 .height(4.dp)
                 .clip(RoundedCornerShape(2.dp))
-                .background(NavyPrimary.copy(alpha = 0.1f))
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(progress)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(TealAccent)
+                    .background(MaterialTheme.colorScheme.tertiary)
             )
         }
 
         Spacer(Modifier.height(48.dp))
 
         TextButton(onClick = onCancel) {
-            Text(stringResource(R.string.cancel), color = TextSecondary, fontSize = 13.sp)
+            Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
         }
     }
 }
@@ -301,14 +291,14 @@ fun AiResultCard(
 ) {
     val confidencePct = (result.confidence * 100).toInt()
     val confidenceColor = when {
-        result.confidence >= 0.75f -> GreenSuccess
+        result.confidence >= 0.75f -> Color(0xFF00796B)
         result.confidence >= 0.50f -> Color(0xFFE67E22)
-        else                        -> DangerRed
+        else                        -> MaterialTheme.colorScheme.error
     }
     val severityColor = when (result.severity.lowercase()) {
-        "urgent"   -> DangerRed
+        "urgent"   -> MaterialTheme.colorScheme.error
         "moderate" -> Color(0xFFE67E22)
-        else        -> GreenSuccess
+        else        -> Color(0xFF00796B)
     }
 
     // Animate confidence bar
@@ -332,13 +322,13 @@ fun AiResultCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onDismiss) {
-                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel), tint = TextSecondary)
+                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel), tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Text(
                 "AI Analysis",
                 fontWeight = FontWeight.SemiBold,
                 fontSize   = 16.sp,
-                color      = TextPrimary,
+                color      = MaterialTheme.colorScheme.onSurface,
                 modifier   = Modifier.weight(1f),
                 textAlign  = TextAlign.Center,
             )
@@ -353,7 +343,7 @@ fun AiResultCard(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .clip(RoundedCornerShape(20.dp))
-                .background(CardWhite)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -363,7 +353,7 @@ fun AiResultCard(
                 modifier = Modifier
                     .size(56.dp)
                     .clip(CircleShape)
-                    .background(NavyPrimary.copy(alpha = 0.08f)),
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)),
             ) {
                 Text(stringResource(R.string.str_1), fontSize = 24.sp)
             }
@@ -373,7 +363,7 @@ fun AiResultCard(
             Text(
                 "AI Detected",
                 fontSize = 12.sp,
-                color    = TextSecondary,
+                color    = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 0.5.sp,
             )
 
@@ -387,7 +377,7 @@ fun AiResultCard(
                 text       = displayLabel,
                 fontSize   = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color      = TextPrimary,
+                color      = MaterialTheme.colorScheme.onSurface,
             )
 
 
@@ -396,12 +386,12 @@ fun AiResultCard(
             Text(
                 text      = result.description,
                 fontSize  = 13.sp,
-                color     = TextSecondary,
+                color     = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
             )
 
             Spacer(Modifier.height(20.dp))
-            HorizontalDivider(color = DividerColor, thickness = 0.5.dp)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
             Spacer(Modifier.height(20.dp))
 
             // Confidence bar
@@ -410,7 +400,7 @@ fun AiResultCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(stringResource(R.string.confidence), fontSize = 12.sp, color = TextSecondary)
+                Text(stringResource(R.string.confidence), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(
                     "$confidencePct%",
                     fontSize   = 13.sp,
@@ -424,7 +414,7 @@ fun AiResultCard(
                     .fillMaxWidth()
                     .height(6.dp)
                     .clip(RoundedCornerShape(3.dp))
-                    .background(DividerColor)
+                    .background(MaterialTheme.colorScheme.outlineVariant)
             ) {
                 Box(
                     modifier = Modifier
@@ -443,7 +433,7 @@ fun AiResultCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(stringResource(R.string.severity), fontSize = 12.sp, color = TextSecondary)
+                Text(stringResource(R.string.severity), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
@@ -468,7 +458,7 @@ fun AiResultCard(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFFFF3E0))
+                    .background(MaterialTheme.colorScheme.errorContainer)
                     .padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -476,13 +466,13 @@ fun AiResultCard(
                 Icon(
                     Icons.Outlined.Warning,
                     contentDescription = null,
-                    tint     = Color(0xFFE65100),
+                    tint     = MaterialTheme.colorScheme.error,
                     modifier = Modifier.size(18.dp),
                 )
                 Text(
                     "Low confidence — we recommend selecting the category manually.",
                     fontSize = 12.sp,
-                    color    = Color(0xFFE65100),
+                    color    = MaterialTheme.colorScheme.error,
                     lineHeight = 18.sp,
                 )
             }
@@ -502,7 +492,7 @@ fun AiResultCard(
                 onClick  = onConfirm,
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape    = RoundedCornerShape(14.dp),
-                colors   = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
+                colors   = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             ) {
                 Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
@@ -514,11 +504,11 @@ fun AiResultCard(
                 onClick  = onChange,
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape    = RoundedCornerShape(14.dp),
-                border   = BorderStroke(1.dp, NavyPrimary),
+                border   = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
             ) {
-                Icon(Icons.Default.Edit, contentDescription = null, tint = NavyPrimary, modifier = Modifier.size(18.dp))
+                Icon(Icons.Default.Edit, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
-                Text(stringResource(R.string.change_category), color = NavyPrimary, fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                Text(stringResource(R.string.change_category), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium, fontSize = 15.sp)
             }
         }
 
@@ -537,7 +527,7 @@ fun CategoryPickerSheet(
 
     ModalBottomSheet(
         onDismissRequest  = onDismiss,
-        containerColor    = CardWhite,
+        containerColor    = MaterialTheme.colorScheme.surface,
         shape             = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
         dragHandle        = {
             Box(
@@ -546,7 +536,7 @@ fun CategoryPickerSheet(
                     .width(40.dp)
                     .height(4.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(DividerColor)
+                    .background(MaterialTheme.colorScheme.outlineVariant)
             )
         },
     ) {
@@ -560,14 +550,14 @@ fun CategoryPickerSheet(
                 "Select Category",
                 fontSize   = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color      = TextPrimary,
+                color      = MaterialTheme.colorScheme.onSurface,
                 modifier   = Modifier.padding(vertical = 16.dp),
             )
 
             Text(
                 "What best describes this issue?",
                 fontSize = 13.sp,
-                color    = TextSecondary,
+                color    = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 16.dp),
             )
 
@@ -585,11 +575,11 @@ fun CategoryPickerSheet(
                             .clip(RoundedCornerShape(14.dp))
                             .background(
                                 if (isSelected) category.color.copy(alpha = 0.12f)
-                                else            BgLight
+                                else            MaterialTheme.colorScheme.background
                             )
                             .border(
                                 width  = if (isSelected) 1.5.dp else 0.5.dp,
-                                color  = if (isSelected) category.color else DividerColor,
+                                color  = if (isSelected) category.color else MaterialTheme.colorScheme.outlineVariant,
                                 shape  = RoundedCornerShape(14.dp),
                             )
                             .clickable { selected = category.id }
@@ -602,7 +592,7 @@ fun CategoryPickerSheet(
                                 text       = category.label,
                                 fontSize   = 13.sp,
                                 fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-                                color      = if (isSelected) category.color else TextPrimary,
+                                color      = if (isSelected) category.color else MaterialTheme.colorScheme.onSurface,
                                 textAlign  = TextAlign.Center,
                             )
                         }
@@ -636,8 +626,8 @@ fun CategoryPickerSheet(
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape    = RoundedCornerShape(14.dp),
                 colors   = ButtonDefaults.buttonColors(
-                    containerColor         = NavyPrimary,
-                    disabledContainerColor = NavyPrimary.copy(alpha = 0.3f),
+                    containerColor         = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                 ),
             ) {
                 Text(stringResource(R.string.confirm_category), fontWeight = FontWeight.Medium, fontSize = 15.sp)
@@ -687,14 +677,14 @@ fun AiSuccessScreen(
             modifier = Modifier
                 .size(100.dp)
                 .clip(CircleShape)
-                .background(GreenSuccess.copy(alpha = 0.12f)),
+                .background(Color(0xFF00796B).copy(alpha = 0.12f)),
         ) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(76.dp)
                     .clip(CircleShape)
-                    .background(GreenSuccess),
+                    .background(Color(0xFF00796B)),
             ) {
                 Icon(
                     Icons.Default.Check,
@@ -707,12 +697,12 @@ fun AiSuccessScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        Text(stringResource(R.string.report_submitted), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+        Text(stringResource(R.string.report_submitted), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
         Spacer(Modifier.height(8.dp))
         Text(
             text      = "Categorized as ${categoryInfo.emoji} ${categoryInfo.label}",
             fontSize  = 14.sp,
-            color     = TextSecondary,
+            color     = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
 
@@ -721,7 +711,7 @@ fun AiSuccessScreen(
         Text(
             text      = "Your community thanks you 🙏\nTrack it under My Reports.",
             fontSize  = 13.sp,
-            color     = TextSecondary,
+            color     = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             lineHeight = 20.sp,
         )
@@ -732,7 +722,7 @@ fun AiSuccessScreen(
             onClick  = onFinish,
             modifier = Modifier.padding(horizontal = 32.dp).fillMaxWidth().height(52.dp),
             shape    = RoundedCornerShape(14.dp),
-            colors   = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
+            colors   = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         ) {
             Text(stringResource(R.string.go_to_my_reports), fontWeight = FontWeight.Medium, fontSize = 15.sp)
         }

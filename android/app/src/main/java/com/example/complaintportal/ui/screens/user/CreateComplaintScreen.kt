@@ -402,21 +402,31 @@ fun CreateComplaintScreen(
                         .fillMaxWidth()
                         .height(260.dp)
                         .clip(RoundedCornerShape(28.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha=0.3f))
-                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha=0.5f), RoundedCornerShape(28.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
+                        .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), RoundedCornerShape(28.dp))
                 ) {
                     if (selectedImageUri == null) {
                         Column(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(Icons.Rounded.CloudUpload, contentDescription = null, tint = MaterialTheme.colorScheme.primary.copy(alpha=0.4f), modifier = Modifier.size(48.dp))
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text(stringResource(R.string.show_us_the_issue), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                            Box(
+                                modifier = Modifier
+                                    .size(64.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(Icons.Rounded.AddPhotoAlternate, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(32.dp))
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(stringResource(R.string.show_us_the_issue), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.onSurface)
+                            Text("Upload a photo of the problem", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
                             Spacer(modifier = Modifier.height(24.dp))
-                            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                                HeroActionButton(
+                            Row(horizontalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.fillMaxWidth()) {
+                                ModernActionButton(
+                                    modifier = Modifier.weight(1f),
                                     icon = Icons.Default.PhotoCamera,
                                     label = "Camera",
                                     onClick = {
@@ -433,8 +443,9 @@ fun CreateComplaintScreen(
                                         }
                                     }
                                 )
-                                HeroActionButton(
-                                    icon = Icons.Default.Image,
+                                ModernActionButton(
+                                    modifier = Modifier.weight(1f),
+                                    icon = Icons.Default.PhotoLibrary,
                                     label = "Gallery",
                                     onClick = { galleryLauncher.launch("image/*") }
                                 )
@@ -523,7 +534,7 @@ fun CreateComplaintScreen(
                         modifier = Modifier
                             .padding(top = 10.dp)
                             .fillMaxWidth()
-                            .height(200.dp)
+                            .height(300.dp)
                             .clip(RoundedCornerShape(24.dp))
                             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(24.dp))
                     ) {
@@ -751,18 +762,33 @@ fun CreateComplaintScreen(
 }
 
 @Composable
-fun HeroActionButton(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, onClick: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+fun ModernActionButton(modifier: Modifier = Modifier, icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, onClick: () -> Unit) {
+    Surface(
+        modifier = modifier
+            .height(64.dp)
             .clip(RoundedCornerShape(20.dp))
-            .clickable { onClick() }
-            .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(20.dp))
-            .padding(horizontal = 28.dp, vertical = 20.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surface,
+        shadowElevation = 2.dp,
+        tonalElevation = 4.dp
     ) {
-        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(36.dp))
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.primary)
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(18.dp))
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+        }
     }
 }
