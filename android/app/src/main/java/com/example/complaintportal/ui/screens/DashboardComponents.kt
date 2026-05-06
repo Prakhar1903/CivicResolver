@@ -472,7 +472,7 @@ fun PriorityUpvoteButton(
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Icon(
-            imageVector = Icons.Rounded.KeyboardArrowUp,
+            imageVector = Icons.Rounded.ThumbUp,
             contentDescription = stringResource(R.string.upvote),
             tint = if (isSupported) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(20.dp)
