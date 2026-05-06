@@ -31,6 +31,8 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileOutputStream
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 // ── Colors ────────────────────────────────────────────────────────────────────
 private val NavyPrimary   @Composable get() = MaterialTheme.colorScheme.primary
@@ -166,7 +168,7 @@ fun AdminProfileScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Admin Profile",
+                        stringResource(R.string.admin_profile),
                         fontWeight = FontWeight.SemiBold,
                         color      = NavyPrimary,
                         fontSize   = 18.sp,
@@ -174,12 +176,12 @@ fun AdminProfileScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = NavyPrimary)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back), tint = NavyPrimary)
                     }
                 },
                 actions = {
                     IconButton(onClick = { galleryLauncher.launch("image/*") }) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit", tint = NavyPrimary)
+                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit), tint = NavyPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = BgLight),
@@ -227,70 +229,70 @@ fun AdminProfileScreen(
             Spacer(Modifier.height(20.dp))
 
             // ── Admin info ────────────────────────────────────────────────────
-            ProfileSection(title = "ADMIN INFO") {
-                InfoRow(icon = Icons.Outlined.Person,         label = "Full Name",    value = profile.name)
+            ProfileSection(title = stringResource(R.string.admin_info)) {
+                InfoRow(icon = Icons.Outlined.Person,         label = stringResource(R.string.full_name),    value = profile.name)
                 SectionDivider()
-                InfoRow(icon = Icons.Outlined.Email,          label = "Email",        value = profile.email)
+                InfoRow(icon = Icons.Outlined.Email,          label = stringResource(R.string.email),        value = profile.email)
                 if (profile.phone.isNotBlank()) {
                     SectionDivider()
-                    InfoRow(icon = Icons.Outlined.Phone,      label = "Phone",        value = profile.phone)
+                    InfoRow(icon = Icons.Outlined.Phone,      label = stringResource(R.string.phone),        value = profile.phone)
                 }
                 if (profile.jurisdiction.isNotBlank()) {
                     SectionDivider()
-                    InfoRow(icon = Icons.Outlined.LocationCity, label = "Jurisdiction", value = profile.jurisdiction)
+                    InfoRow(icon = Icons.Outlined.LocationCity, label = stringResource(R.string.jurisdiction), value = profile.jurisdiction)
                 }
                 if (profile.adminId.isNotBlank()) {
                     SectionDivider()
-                    InfoRow(icon = Icons.Outlined.Badge,      label = "Admin ID",     value = profile.adminId)
+                    InfoRow(icon = Icons.Outlined.Badge,      label = stringResource(R.string.admin_id),     value = profile.adminId)
                 }
             }
 
             Spacer(Modifier.height(12.dp))
 
             // ── Permissions ───────────────────────────────────────────────────
-            ProfileSection(title = "PERMISSIONS") {
-                PermissionRow(label = "Manage Users",    granted = profile.canManageUsers)
+            ProfileSection(title = stringResource(R.string.permissions)) {
+                PermissionRow(label = stringResource(R.string.manage_users),    granted = profile.canManageUsers)
                 SectionDivider()
-                PermissionRow(label = "Export Reports",  granted = profile.canExportReports)
+                PermissionRow(label = stringResource(R.string.export_reports),  granted = profile.canExportReports)
                 SectionDivider()
-                PermissionRow(label = "Broadcast Alerts",granted = profile.canBroadcast)
+                PermissionRow(label = stringResource(R.string.broadcast_alerts),granted = profile.canBroadcast)
             }
 
             Spacer(Modifier.height(12.dp))
 
             // ── Admin actions ─────────────────────────────────────────────────
-            ProfileSection(title = "ADMIN ACTIONS") {
+            ProfileSection(title = stringResource(R.string.admin_actions)) {
                 ActionRow(
                     icon    = Icons.Outlined.People,
-                    label   = "Manage Users",
+                    label   = stringResource(R.string.manage_users),
                     enabled = profile.canManageUsers,
                     onClick = onManageUsers,
                 )
                 SectionDivider()
                 ActionRow(
                     icon    = Icons.Outlined.Description,
-                    label   = "All Complaints",
+                    label   = stringResource(R.string.all_complaints),
                     badge   = profile.totalAssigned.toString(),
                     onClick = onViewAllComplaints,
                 )
                 SectionDivider()
                 ActionRow(
                     icon    = Icons.Outlined.Download,
-                    label   = "Export Reports",
+                    label   = stringResource(R.string.export_reports),
                     enabled = profile.canExportReports,
                     onClick = onExportReports,
                 )
                 SectionDivider()
                 ActionRow(
                     icon    = Icons.Outlined.Campaign,
-                    label   = "Broadcast Message",
+                    label   = stringResource(R.string.broadcast_message),
                     enabled = profile.canBroadcast,
                     onClick = onBroadcastMessage,
                 )
                 SectionDivider()
                 ActionRow(
                     icon    = Icons.Outlined.History,
-                    label   = "Activity Log",
+                    label   = stringResource(R.string.activity_log),
                     onClick = onActivityLog,
                 )
             }
@@ -298,19 +300,19 @@ fun AdminProfileScreen(
             Spacer(Modifier.height(12.dp))
 
             // ── Notification settings ─────────────────────────────────────────
-            ProfileSection(title = "NOTIFICATIONS") {
+            ProfileSection(title = stringResource(R.string.notifications_title)) {
                 ToggleRow(
                     icon     = Icons.Outlined.Notifications,
-                    label    = "Push Notifications",
-                    subtitle = "New complaints & status updates",
+                    label    = stringResource(R.string.push_notifications),
+                    subtitle = stringResource(R.string.notif_subtitle),
                     checked  = notifEnabled,
                     onToggle = { notifEnabled = it },
                 )
                 SectionDivider()
                 ToggleRow(
                     icon     = Icons.Outlined.Email,
-                    label    = "Email Alerts",
-                    subtitle = "Daily digest of pending issues",
+                    label    = stringResource(R.string.email_alerts),
+                    subtitle = stringResource(R.string.email_alerts_subtitle),
                     checked  = emailEnabled,
                     onToggle = { emailEnabled = it },
                 )
@@ -318,11 +320,39 @@ fun AdminProfileScreen(
 
             Spacer(Modifier.height(12.dp))
 
+            // ── Preferences ───────────────────────────────────────────────────
+            ProfileSection(title = stringResource(R.string.preferences)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    verticalAlignment   = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(NavyPrimary.copy(alpha = 0.08f)),
+                        ) {
+                            Icon(Icons.Outlined.Language, contentDescription = null, tint = NavyPrimary, modifier = Modifier.size(18.dp))
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Text(stringResource(R.string.language), fontSize = 14.sp, fontWeight = FontWeight.Medium, color = TextPrimary)
+                    }
+                    com.example.complaintportal.ui.components.LanguageSelector()
+                }
+            }
+
+            Spacer(Modifier.height(12.dp))
+
             // ── Security ──────────────────────────────────────────────────────
-            ProfileSection(title = "SECURITY") {
+            ProfileSection(title = stringResource(R.string.security)) {
                 ActionRow(
                     icon    = Icons.Outlined.Lock,
-                    label   = "Change Password",
+                    label   = stringResource(R.string.change_password),
                     onClick = onChangePassword,
                 )
             }
@@ -346,7 +376,7 @@ fun AdminProfileScreen(
                     modifier = Modifier.size(18.dp),
                 )
                 Spacer(Modifier.width(8.dp))
-                Text("Logout", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                Text(stringResource(R.string.logout), color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Medium, fontSize = 15.sp)
             }
 
             Spacer(Modifier.height(28.dp))
@@ -368,8 +398,8 @@ fun AdminProfileScreen(
                     Icon(Icons.Default.Logout, contentDescription = null, tint = NavyPrimary, modifier = Modifier.size(26.dp))
                 }
             },
-            title   = { Text("Logout?", fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = TextPrimary) },
-            text    = { Text("You'll need to sign in again to access the admin panel.", fontSize = 13.sp, color = TextSecondary, textAlign = TextAlign.Center) },
+            title   = { Text(stringResource(R.string.logout_question), fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = TextPrimary) },
+            text    = { Text(stringResource(R.string.admin_logout_message), fontSize = 13.sp, color = TextSecondary, textAlign = TextAlign.Center) },
             confirmButton = {
                 Button(
                     onClick  = { 
@@ -379,7 +409,7 @@ fun AdminProfileScreen(
                     colors   = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
                     shape    = RoundedCornerShape(10.dp),
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Logout", fontWeight = FontWeight.Medium) }
+                ) { Text(stringResource(R.string.logout), fontWeight = FontWeight.Medium) }
             },
             dismissButton = {
                 OutlinedButton(
@@ -387,7 +417,7 @@ fun AdminProfileScreen(
                     shape    = RoundedCornerShape(10.dp),
                     modifier = Modifier.fillMaxWidth(),
                     border   = BorderStroke(1.dp, DividerColor),
-                ) { Text("Cancel", color = TextSecondary) }
+                ) { Text(stringResource(R.string.cancel), color = TextSecondary) }
             },
             containerColor = CardWhite,
             shape          = RoundedCornerShape(20.dp),
@@ -425,7 +455,7 @@ private fun AdminAvatarSection(
                 if (!profilePic.isNullOrEmpty()) {
                     Image(
                         painter = rememberAsyncImagePainter(profilePic),
-                        contentDescription = "Profile Picture",
+                        contentDescription = stringResource(R.string.profile_picture),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
@@ -458,16 +488,16 @@ private fun AdminAvatarSection(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
+                    .offset(x = (-4).dp, y = (-4).dp)
                     .size(30.dp)
                     .clip(CircleShape)
                     .background(GoldAccent)
                     .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
-                    .clickable { onEditClick() }
-                    .offset(x = (-4).dp, y = (-4).dp),
+                    .clickable { onEditClick() },
             ) {
                 Icon(
                     Icons.Default.Edit,
-                    contentDescription = "Edit",
+                    contentDescription = stringResource(R.string.edit),
                     tint     = Color.White, // Keeps white tint as it's on GoldAccent which doesn't adapt to dark mode
                     modifier = Modifier.size(14.dp),
                 )
@@ -530,11 +560,11 @@ private fun AdminStatsSection(
                 .padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-            AdminStatItem(value = totalAssigned, label = "Assigned",  color = NavyPrimary,   icon = "📋")
+            AdminStatItem(value = totalAssigned, label = stringResource(R.string.assigned),  color = NavyPrimary,   icon = "📋")
             StatDivider()
-            AdminStatItem(value = resolvedCount, label = "Resolved",  color = GreenResolved, icon = "✅")
+            AdminStatItem(value = resolvedCount, label = stringResource(R.string.resolved),  color = GreenResolved, icon = "✅")
             StatDivider()
-            AdminStatItem(value = pendingCount,  label = "Pending",   color = AmberActive,   icon = "⏳")
+            AdminStatItem(value = pendingCount,  label = stringResource(R.string.pending),   color = AmberActive,   icon = "⏳")
         }
 
         // Resolution rate card
@@ -548,7 +578,7 @@ private fun AdminStatsSection(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
-                Text("Resolution Rate", fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f))
+                Text(stringResource(R.string.resolution_rate), fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f))
                 Spacer(Modifier.height(2.dp))
                 Row(verticalAlignment = Alignment.Bottom) {
                     val animatedRate by animateIntAsState(
@@ -563,12 +593,12 @@ private fun AdminStatsSection(
                         color      = TealAccent,
                     )
                     Spacer(Modifier.width(8.dp))
-                    Text("of issues resolved", fontSize = 11.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f), modifier = Modifier.padding(bottom = 4.dp))
+                    Text(stringResource(R.string.of_issues_resolved), fontSize = 11.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f), modifier = Modifier.padding(bottom = 4.dp))
                 }
             }
 
             Column(horizontalAlignment = Alignment.End) {
-                Text("Avg. Resolution", fontSize = 11.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f))
+                Text(stringResource(R.string.avg_resolution), fontSize = 11.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f))
                 Spacer(Modifier.height(2.dp))
                 val animatedDays by animateIntAsState(
                     targetValue   = avgResolutionDays,
@@ -643,7 +673,7 @@ private fun PermissionRow(label: String, granted: Boolean) {
                 .padding(horizontal = 10.dp, vertical = 3.dp),
         ) {
             Text(
-                text      = if (granted) "Granted" else "Denied",
+                text      = if (granted) stringResource(R.string.granted) else stringResource(R.string.denied),
                 fontSize  = 11.sp,
                 fontWeight = FontWeight.SemiBold,
                 color     = if (granted) GreenResolved else DangerRed,
@@ -743,7 +773,7 @@ private fun ActionRow(
                 }
             }
             if (!enabled) {
-                Icon(Icons.Default.Lock, contentDescription = "No permission", tint = TextSecondary.copy(alpha = 0.5f), modifier = Modifier.size(16.dp))
+                Icon(Icons.Default.Lock, contentDescription = stringResource(R.string.no_permission), tint = TextSecondary.copy(alpha = 0.5f), modifier = Modifier.size(16.dp))
             } else {
                 Icon(Icons.Default.ChevronRight, contentDescription = null, tint = TextSecondary, modifier = Modifier.size(20.dp))
             }

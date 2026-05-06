@@ -59,6 +59,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
+import androidx.compose.ui.res.stringResource
 
 // --- Styled Components ---
 
@@ -83,6 +84,17 @@ fun AuthBackground(imageModel: Any, content: @Composable () -> Unit) {
                 )
         )
         content()
+        
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(32.dp), 
+            horizontalArrangement = Arrangement.End
+        ) {
+            com.example.complaintportal.ui.components.LanguageSelector(
+                textColor = Color.White,
+                iconColor = Color.White,
+                backgroundColor = Color.Black.copy(alpha = 0.3f)
+            )
+        }
     }
 }
 
@@ -262,7 +274,7 @@ fun AppLogoIcon() {
 @Composable
 fun FixedHeaderContent(
     modifier: Modifier = Modifier,
-    title: String = "For a Better\nCommunity"
+    title: String = stringResource(R.string.for_a_better_community)
 ) {
     Column(
         modifier = modifier
@@ -271,7 +283,8 @@ fun FixedHeaderContent(
     ) {
 //        Spacer(modifier = Modifier.height(60.dp))
 //        AppLogoIcon()
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(36.dp)) // Placeholder for LanguageSelector height
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             title,
             style = MaterialTheme.typography.headlineLarge.copy(
@@ -323,7 +336,7 @@ fun LoginScreen(
                 ) {
                     Column {
                         Text(
-                            "Welcome back",
+                            stringResource(R.string.welcome_back),
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -338,14 +351,14 @@ fun LoginScreen(
                 UnderlinedAuthTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = "Email",
+                    label = stringResource(R.string.email),
                     leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) }
                 )
 
                 UnderlinedAuthTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = "Password",
+                    label = stringResource(R.string.password),
                     leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) },
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
@@ -363,7 +376,7 @@ fun LoginScreen(
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
                     TextButton(onClick = onNavigateToForgotPassword) {
                         Text(
-                            "Forgot Password?", 
+                            stringResource(R.string.forgot_password), 
                             color = MaterialTheme.colorScheme.primary, 
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
@@ -374,7 +387,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 OrangeButton(
-                    text = "Sign in",
+                    text = stringResource(R.string.sign_in),
                     onClick = { viewModel.login(LoginRequest(email, password), onLoginSuccess) },
                     isLoading = state.isLoading
                 )
@@ -382,7 +395,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(28.dp))
 
                 Text(
-                    "or sign in with",
+                    stringResource(R.string.or_sign_in_with),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -408,9 +421,9 @@ fun LoginScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("New here? ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                    Text(stringResource(R.string.new_here), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                     Text(
-                        "Create Account",
+                        stringResource(R.string.create_account),
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
@@ -473,7 +486,7 @@ fun SignupScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "New\nAccount",
+                        stringResource(R.string.new_naccount),
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -488,21 +501,21 @@ fun SignupScreen(
                 UnderlinedAuthTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = "Email",
+                    label = stringResource(R.string.email),
                     leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) }
                 )
 
                 UnderlinedAuthTextField(
                     value = fullName,
                     onValueChange = { fullName = it },
-                    label = "Username",
+                    label = stringResource(R.string.username),
                     leadingIcon = { Icon(Icons.Rounded.Person, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) }
                 )
 
                 UnderlinedAuthTextField(
                     value = address,
                     onValueChange = { address = it },
-                    label = "Address / Location",
+                    label = stringResource(R.string.address_location),
                     leadingIcon = { Icon(Icons.Rounded.LocationOn, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) },
                     trailingIcon = {
                         if (isFetchingLocation) {
@@ -519,7 +532,7 @@ fun SignupScreen(
                                     locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
                                 }
                             }) {
-                                Icon(Icons.Rounded.MyLocation, contentDescription = "Get Location", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                Icon(Icons.Rounded.MyLocation, contentDescription = stringResource(R.string.get_location), tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                             }
                         }
                     }
@@ -528,7 +541,7 @@ fun SignupScreen(
                 UnderlinedAuthTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = "Password",
+                    label = stringResource(R.string.password),
                     leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) },
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
@@ -546,7 +559,7 @@ fun SignupScreen(
                 Spacer(modifier = Modifier.height(36.dp))
 
                 OrangeButton(
-                    text = "Sign up",
+                    text = stringResource(R.string.sign_up),
                     onClick = {
                         if (fullName.isNotBlank() && email.isNotBlank() && password.isNotBlank() && address.isNotBlank()) {
                             viewModel.pendingSignupRequest = CreateAccountRequest(fullName, email, password, address)
@@ -575,9 +588,9 @@ fun SignupScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Already have an account? ", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                    Text(stringResource(R.string.already_have_an_account), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                     Text(
-                        "Sign In",
+                        stringResource(R.string.sign_in),
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
@@ -614,7 +627,7 @@ fun ForgotPasswordScreen(
 
     AuthBackground(imageModel = "https://images.unsplash.com/photo-1501785888041-af3ef285b470") {
         // FIXED HEADER (Simulated with title change)
-        FixedHeaderContent(title = "Reset Password")
+        FixedHeaderContent(title = stringResource(R.string.reset_password))
 
         Column(
             modifier = Modifier
@@ -628,7 +641,7 @@ fun ForgotPasswordScreen(
                 when (currentStep) {
                     ForgotPasswordStep.ENTER_EMAIL -> {
                         Text(
-                            text = "Enter your email address to receive a password reset OTP.",
+                            text = stringResource(R.string.enter_email_reset),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 24.dp)
@@ -636,13 +649,13 @@ fun ForgotPasswordScreen(
                         UnderlinedAuthTextField(
                             value = email,
                             onValueChange = { email = it },
-                            label = "Email Address",
+                            label = stringResource(R.string.email_address),
                             leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                         OrangeButton(
-                            text = "Send OTP",
+                            text = stringResource(R.string.send_otp),
                             onClick = {
                                 if (email.isNotBlank()) {
                                     viewModel.sendPasswordResetOtp(email) {
@@ -657,7 +670,7 @@ fun ForgotPasswordScreen(
                     }
                     ForgotPasswordStep.ENTER_OTP -> {
                         Text(
-                            text = "Enter the verification code sent to $email",
+                            text = stringResource(R.string.enter_verification_code_sent_to, email),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 24.dp)
@@ -665,13 +678,13 @@ fun ForgotPasswordScreen(
                         UnderlinedAuthTextField(
                             value = otp,
                             onValueChange = { otp = it },
-                            label = "Verification Code",
+                            label = stringResource(R.string.verification_code),
                             leadingIcon = { Icon(Icons.Rounded.LockOpen, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                         OrangeButton(
-                            text = "Verify Code",
+                            text = stringResource(R.string.verify_code),
                             onClick = {
                                 if (otp.isNotBlank()) {
                                     viewModel.verifyPasswordResetOtp(email, otp) { token ->
@@ -687,7 +700,7 @@ fun ForgotPasswordScreen(
                     }
                     ForgotPasswordStep.ENTER_NEW_PASSWORD -> {
                         Text(
-                            text = "Create a strong new password for your account.",
+                            text = stringResource(R.string.create_strong_password),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 24.dp)
@@ -695,7 +708,7 @@ fun ForgotPasswordScreen(
                         UnderlinedAuthTextField(
                             value = newPassword,
                             onValueChange = { newPassword = it },
-                            label = "New Password",
+                            label = stringResource(R.string.new_password),
                             leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                             trailingIcon = {
                                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -711,13 +724,13 @@ fun ForgotPasswordScreen(
                         UnderlinedAuthTextField(
                             value = confirmPassword,
                             onValueChange = { confirmPassword = it },
-                            label = "Confirm Password",
+                            label = stringResource(R.string.confirm_password),
                             leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                             visualTransformation = PasswordVisualTransformation()
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                         OrangeButton(
-                            text = "Reset Password",
+                            text = stringResource(R.string.reset_password),
                             onClick = {
                                 if (newPassword == confirmPassword && newPassword.length >= 6) {
                                     viewModel.resetPassword(
@@ -763,7 +776,7 @@ fun OtpVerifyScreen(
 
     AuthBackground(imageModel = "https://images.unsplash.com/photo-1501785888041-af3ef285b470") {
         // FIXED HEADER
-        FixedHeaderContent(title = "Verify Account")
+        FixedHeaderContent(title = stringResource(R.string.verify_account))
 
         Column(
             modifier = Modifier
@@ -778,7 +791,7 @@ fun OtpVerifyScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onNavigateBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back), tint = Color.White)
                 }
             }
 
@@ -793,14 +806,14 @@ fun OtpVerifyScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Check your email",
+                    text = stringResource(R.string.check_your_email),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Text(
-                    text = "We sent a 6-digit verification code to $email",
+                    text = stringResource(R.string.we_sent_code_to, email),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -812,7 +825,7 @@ fun OtpVerifyScreen(
                 UnderlinedAuthTextField(
                     value = otp,
                     onValueChange = { otp = it },
-                    label = "Verification Code",
+                    label = stringResource(R.string.verification_code),
                     leadingIcon = { Icon(Icons.Rounded.LockOpen, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
@@ -820,7 +833,7 @@ fun OtpVerifyScreen(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 OrangeButton(
-                    text = "Verify & Create Account",
+                    text = stringResource(R.string.verify_and_create_account),
                     onClick = {
                         if (otp.isNotBlank()) {
                             viewModel.verifyOtp(email, otp) {
@@ -850,7 +863,7 @@ fun OtpVerifyScreen(
                     onClick = { viewModel.sendOtp(email) {} },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
-                    Text("Resend Code", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.resend_code), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 }
             }
         }

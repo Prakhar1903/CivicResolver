@@ -19,6 +19,8 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 // ── Status Colors (maintained for clarity, but used theme-awarely) ─────────────
 private val TealAccent    = Color(0xFF7ECFC0)
@@ -83,7 +85,7 @@ fun UserAnalyticsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back), tint = MaterialTheme.colorScheme.primary)
                     }
                 },
                 actions = {
@@ -594,8 +596,8 @@ private fun CommunityRankCard(rankPct: Int, location: String, loaded: Boolean) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text("Top 1%", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("Top 100%", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.top_1), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.top_100), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
 
         Spacer(Modifier.height(12.dp))

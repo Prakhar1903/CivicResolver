@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.complaintportal.ui.viewmodel.ComplaintViewModel
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.animation.ExperimentalSharedTransitionApi::class)
 @Composable
@@ -56,10 +58,10 @@ fun UserComplaintDetailScreen(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back), tint = MaterialTheme.colorScheme.primary)
                     }
                 },
-                title = { Text("CivicResolve", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primaryContainer) },
+                title = { Text(stringResource(R.string.civicresolve), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primaryContainer) },
                 actions = {
                     if (complaint != null) {
                         IconButton(onClick = {
@@ -67,7 +69,7 @@ fun UserComplaintDetailScreen(
                             val mapIntent = Intent(Intent.ACTION_VIEW, mapUri)
                             context.startActivity(mapIntent)
                         }) {
-                            Icon(Icons.Default.Map, contentDescription = "Open in Maps", tint = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Default.Map, contentDescription = stringResource(R.string.open_in_maps), tint = MaterialTheme.colorScheme.primary)
                         }
                         IconButton(onClick = {
                             val sendIntent = Intent(Intent.ACTION_SEND).apply {
@@ -87,7 +89,7 @@ fun UserComplaintDetailScreen(
                             }
                             context.startActivity(Intent.createChooser(sendIntent, "Share Complaint"))
                         }) {
-                            Icon(Icons.Default.Share, contentDescription = "Share", tint = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Default.Share, contentDescription = stringResource(R.string.share), tint = MaterialTheme.colorScheme.primary)
                         }
                     }
                     Box(
@@ -149,7 +151,7 @@ fun UserComplaintDetailScreen(
 
                                 Image(
                                     painter = rememberAsyncImagePainter(complaint.beforeImageUrl),
-                                    contentDescription = "Complaint Image",
+                                    contentDescription = stringResource(R.string.complaint_image),
                                     contentScale = ContentScale.Crop,
                                     modifier = imageModifier
                                 )
@@ -211,7 +213,7 @@ fun UserComplaintDetailScreen(
                         .padding(24.dp)
                 ) {
                     Column {
-                        Text("Issue Description", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.issue_description), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(complaint.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, lineHeight = MaterialTheme.typography.bodyLarge.lineHeight)
                     }
@@ -227,11 +229,11 @@ fun UserComplaintDetailScreen(
                             .padding(24.dp)
                     ) {
                         Column {
-                            Text("Resolution Proof", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.resolution_proof), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.height(16.dp))
                             Image(
                                 painter = rememberAsyncImagePainter(complaint.afterImageUrl),
-                                contentDescription = "After Image",
+                                contentDescription = stringResource(R.string.after_image),
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxWidth().height(200.dp).clip(RoundedCornerShape(12.dp)).clickable { showZoomDialog = complaint.afterImageUrl }
                             )
@@ -249,7 +251,7 @@ fun UserComplaintDetailScreen(
                             .padding(24.dp)
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                            Text("Rate Resolution", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.rate_resolution), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.height(16.dp))
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 for (i in 1..5) {
@@ -272,7 +274,7 @@ fun UserComplaintDetailScreen(
                             }
                             if (complaint.rating > 0) {
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text("Thank you for your feedback!", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                                Text(stringResource(R.string.thank_you_for_your_feedback), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
@@ -294,9 +296,9 @@ fun UserComplaintDetailScreen(
                             Icon(Icons.Default.ChatBubble, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Need an update?", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.need_an_update), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("Our case managers are ready to provide detailed updates regarding this request.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(stringResource(R.string.our_case_managers_are_ready_to_provide_detailed_updates_regarding_this_request), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         
                         Spacer(modifier = Modifier.height(32.dp))
                         Button(
@@ -305,7 +307,7 @@ fun UserComplaintDetailScreen(
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) {
-                            Text("Open Support Chat", fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.open_support_chat), fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.width(8.dp))
                             Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
                         }

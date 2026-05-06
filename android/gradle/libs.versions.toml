@@ -23,8 +23,10 @@ ucrop = "2.2.8"
 mpandroidchart = "v3.1.0"
 lottie = "6.6.2"
 kotlinxCoroutinesPlayServices = "1.9.0"
+appcompat = "1.6.1"
 
 [libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
 google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }

@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.example.complaintportal.data.model.Message
 import com.example.complaintportal.ui.viewmodel.ComplaintViewModel
 import com.example.complaintportal.ui.viewmodel.MessageViewModel
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +63,7 @@ fun ChatScreen(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back), tint = MaterialTheme.colorScheme.primary)
                     }
                 },
                 title = {
@@ -75,7 +77,7 @@ fun ChatScreen(
                 },
                 actions = {
                     IconButton(onClick = { /* TODO */ }) {
-                        Icon(Icons.Default.Info, contentDescription = "Info")
+                        Icon(Icons.Default.Info, contentDescription = stringResource(R.string.info))
                     }
                 }
             )
@@ -96,7 +98,7 @@ fun ChatScreen(
                         TextField(
                             value = messageText,
                             onValueChange = { messageText = it },
-                            placeholder = { Text("Message Support...", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.outline) },
+                            placeholder = { Text(stringResource(R.string.message_support), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.outline) },
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = Color.Transparent,
                                 unfocusedContainerColor = Color.Transparent,
@@ -121,7 +123,7 @@ fun ChatScreen(
                             },
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Default.Send, contentDescription = "Send", tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        Icon(Icons.Default.Send, contentDescription = stringResource(R.string.send), tint = MaterialTheme.colorScheme.onPrimaryContainer)
                     }
                 }
             }
@@ -172,7 +174,7 @@ fun MessageItem(message: Message, isMine: Boolean) {
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text("Just now", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.just_now), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     if (isMine) {
                         Icon(Icons.Default.DoneAll, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(12.dp))
                     }

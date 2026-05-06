@@ -18,6 +18,8 @@ import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 // ── Theme-Aware Colors ────────────────────────────────────────────────────────
 data class AdminAnalyticsColors(
@@ -157,19 +159,19 @@ fun AdminAnalyticsScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text("Admin Analytics", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = colors.TextPrimary)
+                        Text(stringResource(R.string.admin_analytics), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = colors.TextPrimary)
                         Text(data.period, fontSize = 11.sp, color = colors.TextSecondary)
                     }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = colors.NavyPrimary)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back), tint = colors.NavyPrimary)
                     }
                 },
                 actions = {
                     // Export CSV button
                     IconButton(onClick = exportCsv) {
-                        Icon(Icons.Outlined.Download, contentDescription = "Export", tint = colors.NavyPrimary)
+                        Icon(Icons.Outlined.Download, contentDescription = stringResource(R.string.export), tint = colors.NavyPrimary)
                     }
 
                     // Period Selector
@@ -321,7 +323,7 @@ private fun AdminKpiCard(data: AdminAnalyticsData, loaded: Boolean) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column {
-                Text("Admin Overview", fontSize = 12.sp, color = Color.White.copy(alpha = 0.7f), letterSpacing = 1.sp)
+                Text(stringResource(R.string.admin_overview), fontSize = 12.sp, color = Color.White.copy(alpha = 0.7f), letterSpacing = 1.sp)
                 Text("📍 ${data.jurisdiction}", fontSize = 13.sp, color = colors.TealAccent)
             }
             Box(
@@ -330,7 +332,7 @@ private fun AdminKpiCard(data: AdminAnalyticsData, loaded: Boolean) {
                     .background(Color.White.copy(alpha = 0.12f))
                     .padding(horizontal = 10.dp, vertical = 4.dp),
             ) {
-                Text("⭐ Admin", fontSize = 11.sp, color = colors.GoldAccent, fontWeight = FontWeight.SemiBold)
+                Text(stringResource(R.string.admin), fontSize = 11.sp, color = colors.GoldAccent, fontWeight = FontWeight.SemiBold)
             }
         }
 
@@ -365,7 +367,7 @@ private fun AdminKpiCard(data: AdminAnalyticsData, loaded: Boolean) {
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Icon(Icons.Outlined.Timer, contentDescription = null, tint = Color.White.copy(alpha = 0.6f), modifier = Modifier.size(14.dp))
-                Text("Avg. Resolution Time", fontSize = 12.sp, color = Color.White.copy(alpha = 0.6f))
+                Text(stringResource(R.string.avg_resolution_time), fontSize = 12.sp, color = Color.White.copy(alpha = 0.6f))
             }
             val animDays by animateFloatAsState(
                 targetValue   = if (loaded) data.avgResolutionDays else 0f,
@@ -453,12 +455,12 @@ private fun ResolutionRateCard(ratePct: Int, avgDays: Float, loaded: Boolean) {
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("$animRate%", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = rateColor)
-                Text("Rate", fontSize = 9.sp, color = colors.TextSecondary)
+                Text(stringResource(R.string.rate), fontSize = 9.sp, color = colors.TextSecondary)
             }
         }
 
         Column(modifier = Modifier.weight(1f)) {
-            Text("Resolution Rate", fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = colors.TextPrimary)
+            Text(stringResource(R.string.resolution_rate), fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = colors.TextPrimary)
             Spacer(Modifier.height(4.dp))
             Text(
                 when {

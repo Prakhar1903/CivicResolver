@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.*
 import com.example.complaintportal.data.model.AiAnalysisResult
 import com.example.complaintportal.data.model.IssueCategory
 import kotlinx.coroutines.delay
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 // ── Colors ────────────────────────────────────────────────────────────────────
 private val NavyPrimary   = Color(0xFF1A3A6E)
@@ -168,8 +170,8 @@ fun AiSubmittingScreen() {
     ) {
         CircularProgressIndicator(color = NavyPrimary, modifier = Modifier.size(48.dp))
         Spacer(Modifier.height(24.dp))
-        Text("Uploading your report...", fontWeight = FontWeight.Bold, color = TextPrimary)
-        Text("This will only take a moment.", color = TextSecondary, fontSize = 13.sp)
+        Text(stringResource(R.string.uploading_your_report), fontWeight = FontWeight.Bold, color = TextPrimary)
+        Text(stringResource(R.string.this_will_only_take_a_moment), color = TextSecondary, fontSize = 13.sp)
     }
 }
 
@@ -233,7 +235,7 @@ fun AiLoadingScreen(onCancel: () -> Unit) {
                         Brush.linearGradient(listOf(NavyPrimary, Color(0xFF1A5C9E)))
                     ),
             ) {
-                Text("🤖", fontSize = 28.sp)
+                Text(stringResource(R.string.str_1), fontSize = 28.sp)
             }
         }
 
@@ -284,7 +286,7 @@ fun AiLoadingScreen(onCancel: () -> Unit) {
         Spacer(Modifier.height(48.dp))
 
         TextButton(onClick = onCancel) {
-            Text("Cancel", color = TextSecondary, fontSize = 13.sp)
+            Text(stringResource(R.string.cancel), color = TextSecondary, fontSize = 13.sp)
         }
     }
 }
@@ -330,7 +332,7 @@ fun AiResultCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onDismiss) {
-                Icon(Icons.Default.Close, contentDescription = "Cancel", tint = TextSecondary)
+                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel), tint = TextSecondary)
             }
             Text(
                 "AI Analysis",
@@ -363,7 +365,7 @@ fun AiResultCard(
                     .clip(CircleShape)
                     .background(NavyPrimary.copy(alpha = 0.08f)),
             ) {
-                Text("🤖", fontSize = 24.sp)
+                Text(stringResource(R.string.str_1), fontSize = 24.sp)
             }
 
             Spacer(Modifier.height(8.dp))
@@ -408,7 +410,7 @@ fun AiResultCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("Confidence", fontSize = 12.sp, color = TextSecondary)
+                Text(stringResource(R.string.confidence), fontSize = 12.sp, color = TextSecondary)
                 Text(
                     "$confidencePct%",
                     fontSize   = 13.sp,
@@ -441,7 +443,7 @@ fun AiResultCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("Severity", fontSize = 12.sp, color = TextSecondary)
+                Text(stringResource(R.string.severity), fontSize = 12.sp, color = TextSecondary)
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
@@ -504,7 +506,7 @@ fun AiResultCard(
             ) {
                 Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("Looks right — Confirm", fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                Text(stringResource(R.string.looks_right_confirm), fontWeight = FontWeight.Medium, fontSize = 15.sp)
             }
 
             // Change button
@@ -516,7 +518,7 @@ fun AiResultCard(
             ) {
                 Icon(Icons.Default.Edit, contentDescription = null, tint = NavyPrimary, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("Change Category", color = NavyPrimary, fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                Text(stringResource(R.string.change_category), color = NavyPrimary, fontWeight = FontWeight.Medium, fontSize = 15.sp)
             }
         }
 
@@ -638,7 +640,7 @@ fun CategoryPickerSheet(
                     disabledContainerColor = NavyPrimary.copy(alpha = 0.3f),
                 ),
             ) {
-                Text("Confirm Category", fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                Text(stringResource(R.string.confirm_category), fontWeight = FontWeight.Medium, fontSize = 15.sp)
             }
         }
     }
@@ -705,7 +707,7 @@ fun AiSuccessScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        Text("Report Submitted!", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+        Text(stringResource(R.string.report_submitted), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
         Spacer(Modifier.height(8.dp))
         Text(
             text      = "Categorized as ${categoryInfo.emoji} ${categoryInfo.label}",
@@ -732,7 +734,7 @@ fun AiSuccessScreen(
             shape    = RoundedCornerShape(14.dp),
             colors   = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
         ) {
-            Text("Go to My Reports", fontWeight = FontWeight.Medium, fontSize = 15.sp)
+            Text(stringResource(R.string.go_to_my_reports), fontWeight = FontWeight.Medium, fontSize = 15.sp)
         }
     }
 }

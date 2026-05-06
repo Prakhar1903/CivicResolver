@@ -32,6 +32,8 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileOutputStream
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 // ── Colors (matches your app theme) ──────────────────────────────────────────
 private val NavyPrimary   @Composable get() = MaterialTheme.colorScheme.primary
@@ -127,15 +129,15 @@ fun ProfileScreen(
 
     // Map existing user data to the new profile structure
     val profile = UserProfile(
-        name = user?.fullName ?: "Citizen",
+        name = user?.fullName ?: stringResource(R.string.citizen),
         email = user?.email ?: "N/A",
         phone = user?.address ?: "",
         district = user?.homeDistrict ?: "",
-        memberSince = "Citizen Advocate",
+        memberSince = stringResource(R.string.citizen_advocate),
         reportsCount = calculatedTotalReports,
         resolvedCount = calculatedResolvedCount,
         upvotesCount = calculatedTotalUpvotes,
-        role = if (user?.isAdmin == true) "System Administrator" else "Citizen Advocate",
+        role = if (user?.isAdmin == true) stringResource(R.string.system_administrator) else stringResource(R.string.citizen_advocate),
         initials = user?.fullName?.take(2)?.uppercase() ?: "C"
     )
 
@@ -161,7 +163,7 @@ fun ProfileScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = NavyPrimary)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back), tint = NavyPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = BgLight),
@@ -209,32 +211,55 @@ fun ProfileScreen(
             Spacer(Modifier.height(20.dp))
 
             // ── Account info ──────────────────────────────────────────────────
-            ProfileSection(title = "ACCOUNT INFO") {
-                InfoRow(icon = Icons.Outlined.Person,      label = "Full Name",     value = profile.name)
+            ProfileSection(title = stringResource(R.string.account_info)) {
+                InfoRow(icon = Icons.Outlined.Person,      label = stringResource(R.string.full_name),     value = profile.name)
                 SectionDivider()
-                InfoRow(icon = Icons.Outlined.Email,       label = "Email Address", value = profile.email)
+                InfoRow(icon = Icons.Outlined.Email,       label = stringResource(R.string.email_address), value = profile.email)
                 if (profile.phone.isNotBlank()) {
                     SectionDivider()
-                    InfoRow(icon = Icons.Outlined.Phone,   label = "Phone",         value = profile.phone)
+                    InfoRow(icon = Icons.Outlined.Phone,   label = stringResource(R.string.phone),         value = profile.phone)
                 }
                 if (profile.district.isNotBlank()) {
                     SectionDivider()
-                    InfoRow(icon = Icons.Outlined.LocationOn, label = "District",   value = profile.district)
+                    InfoRow(icon = Icons.Outlined.LocationOn, label = stringResource(R.string.district),   value = profile.district)
                 }
             }
 
             Spacer(Modifier.height(12.dp))
 
             // ── Settings ──────────────────────────────────────────────────────
-            ProfileSection(title = "SETTINGS") {
+            ProfileSection(title = stringResource(R.string.settings_title)) {
                 ToggleRow(
                     icon     = Icons.Outlined.Notifications,
-                    label    = "Push Notifications",
+                    label    = stringResource(R.string.push_notifications),
                     checked  = notifEnabled,
                     onToggle = {
                         notifEnabled = it
                     },
                 )
+                SectionDivider()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    verticalAlignment   = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(NavyPrimary.copy(alpha = 0.08f)),
+                        ) {
+                            Icon(Icons.Outlined.Language, contentDescription = null, tint = NavyPrimary, modifier = Modifier.size(18.dp))
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Text(stringResource(R.string.language), fontSize = 14.sp, fontWeight = FontWeight.Medium, color = TextPrimary)
+                    }
+                    com.example.complaintportal.ui.components.LanguageSelector()
+                }
                 SectionDivider()
             }
 
@@ -257,7 +282,7 @@ fun ProfileScreen(
                     modifier = Modifier.size(18.dp),
                 )
                 Spacer(Modifier.width(8.dp))
-                Text("Logout", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                Text(stringResource(R.string.logout), color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Medium, fontSize = 15.sp)
             }
 
 
@@ -270,9 +295,9 @@ fun ProfileScreen(
         CivicAlertDialog(
             icon        = Icons.Default.Logout,
             iconColor   = NavyPrimary,
-            title       = "Logout?",
-            message     = "You'll need to sign in again to report or track issues.",
-            confirmText = "Logout",
+            title       = stringResource(R.string.logout_question),
+            message     = stringResource(R.string.logout_message),
+            confirmText = stringResource(R.string.logout),
             confirmColor = NavyPrimary,
             onConfirm   = { 
                 showLogoutDialog = false
@@ -313,7 +338,7 @@ private fun AvatarSection(
                 if (!profilePic.isNullOrEmpty()) {
                     Image(
                         painter = rememberAsyncImagePainter(profilePic),
-                        contentDescription = "Profile Picture",
+                        contentDescription = stringResource(R.string.profile_picture),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
@@ -346,16 +371,16 @@ private fun AvatarSection(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
+                    .offset(x = (-4).dp, y = (-4).dp)
                     .size(30.dp)
                     .clip(CircleShape)
                     .background(TealAccent)
                     .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
-                    .clickable { onEditClick() }
-                    .offset(x = (-4).dp, y = (-4).dp),
+                    .clickable { onEditClick() },
             ) {
                 Icon(
                     Icons.Default.Edit,
-                    contentDescription = "Edit profile",
+                    contentDescription = stringResource(R.string.edit_profile),
                     tint     = MaterialTheme.colorScheme.onSecondary,
                     modifier = Modifier.size(14.dp),
                 )
@@ -403,11 +428,11 @@ private fun StatsRow(reports: Int, resolved: Int, upvotes: Int) {
             .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-        StatItem(value = reports,  label = "Reports",  icon = "📋")
+        StatItem(value = reports,  label = stringResource(R.string.reports),  icon = "📋")
         StatDivider()
-        StatItem(value = resolved, label = "Resolved", icon = "✅")
+        StatItem(value = resolved, label = stringResource(R.string.resolved), icon = "✅")
         StatDivider()
-        StatItem(value = upvotes,  label = "Upvotes",  icon = "⭐")
+        StatItem(value = upvotes,  label = stringResource(R.string.upvotes),  icon = "⭐")
     }
 }
 
@@ -643,7 +668,7 @@ private fun CivicAlertDialog(
                 modifier = Modifier.fillMaxWidth(),
                 border   = BorderStroke(1.dp, DividerColor),
             ) {
-                Text("Cancel", color = TextSecondary)
+                Text(stringResource(R.string.cancel), color = TextSecondary)
             }
         },
         containerColor = CardWhite,

@@ -35,6 +35,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,7 +89,7 @@ fun LocationOnboardingScreen(
                     IconButton(onClick = { viewModel.logout(context) }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ExitToApp, 
-                            contentDescription = "Logout",
+                            contentDescription = stringResource(R.string.logout),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -141,7 +143,7 @@ fun LocationOnboardingScreen(
                             if (isLocating) {
                                 CircularProgressIndicator(modifier = Modifier.size(48.dp))
                                 Spacer(modifier = Modifier.height(16.dp))
-                                Text("Identifying your district...", style = MaterialTheme.typography.labelLarge)
+                                Text(stringResource(R.string.identifying_your_district), style = MaterialTheme.typography.labelLarge)
                             } else {
                                 Button(
                                     onClick = {
@@ -158,7 +160,7 @@ fun LocationOnboardingScreen(
                                 ) {
                                     Icon(Icons.Default.LocationOn, contentDescription = null)
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Grant Location Access", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                    Text(stringResource(R.string.grant_location_access), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                                 }
 
                                 if (permissionDenied) {
@@ -234,7 +236,7 @@ fun LocationOnboardingScreen(
                                 if (state.isLoading) {
                                     CircularProgressIndicator(color = MaterialTheme.colorScheme.onSecondary, modifier = Modifier.size(24.dp))
                                 } else {
-                                    Text("Enter Portal", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                    Text(stringResource(R.string.enter_portal), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                                 }
                             }
                         }

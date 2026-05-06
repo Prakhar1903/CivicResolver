@@ -36,6 +36,8 @@ import org.osmdroid.views.overlay.Marker
 import androidx.compose.foundation.Image
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.rememberAsyncImagePainter
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 enum class MapScope {
     MY_REPORTS,
@@ -299,7 +301,7 @@ fun OsmDashboardMap(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        Text("View Details", fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.view_details), fontWeight = FontWeight.Bold)
                     }
                 }
             }

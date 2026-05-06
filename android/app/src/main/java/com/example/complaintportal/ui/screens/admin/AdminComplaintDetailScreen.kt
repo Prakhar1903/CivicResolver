@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.complaintportal.ui.viewmodel.ComplaintViewModel
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.animation.ExperimentalSharedTransitionApi::class)
 @Composable
@@ -96,10 +98,10 @@ fun AdminComplaintDetailScreen(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back), tint = MaterialTheme.colorScheme.primary)
                     }
                 },
-                title = { Text("Case Management", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primaryContainer) },
+                title = { Text(stringResource(R.string.case_management), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primaryContainer) },
                 actions = {
                     if (complaint != null) {
                         IconButton(onClick = {
@@ -107,7 +109,7 @@ fun AdminComplaintDetailScreen(
                             val mapIntent = Intent(Intent.ACTION_VIEW, mapUri)
                             context.startActivity(mapIntent)
                         }) {
-                            Icon(Icons.Default.Map, contentDescription = "Open in Maps", tint = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Default.Map, contentDescription = stringResource(R.string.open_in_maps), tint = MaterialTheme.colorScheme.primary)
                         }
                         IconButton(onClick = {
                             val sendIntent = Intent(Intent.ACTION_SEND).apply {
@@ -127,7 +129,7 @@ fun AdminComplaintDetailScreen(
                             }
                             context.startActivity(Intent.createChooser(sendIntent, "Share Complaint"))
                         }) {
-                            Icon(Icons.Default.Share, contentDescription = "Share", tint = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Default.Share, contentDescription = stringResource(R.string.share), tint = MaterialTheme.colorScheme.primary)
                         }
                     }
                     Box(
@@ -189,7 +191,7 @@ fun AdminComplaintDetailScreen(
 
                                 Image(
                                     painter = rememberAsyncImagePainter(complaint.beforeImageUrl),
-                                    contentDescription = "Complaint Image",
+                                    contentDescription = stringResource(R.string.complaint_image),
                                     contentScale = ContentScale.Crop,
                                     modifier = imageModifier
                                 )
@@ -250,7 +252,7 @@ fun AdminComplaintDetailScreen(
                         .padding(24.dp)
                 ) {
                     Column {
-                        Text("Administrative Actions", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSecondaryContainer)
+                        Text(stringResource(R.string.administrative_actions), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSecondaryContainer)
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                             if (complaint.status.lowercase() == "new") {
@@ -264,7 +266,7 @@ fun AdminComplaintDetailScreen(
                                     modifier = Modifier.weight(1f),
                                     shape = RoundedCornerShape(12.dp)
                                 ) {
-                                    Text("Process started")
+                                    Text(stringResource(R.string.process_started))
                                 }
                             } else {
                                 Button(
@@ -272,7 +274,7 @@ fun AdminComplaintDetailScreen(
                                     modifier = Modifier.weight(1f),
                                     shape = RoundedCornerShape(12.dp)
                                 ) {
-                                    Text("In Process")
+                                    Text(stringResource(R.string.in_process))
                                 }
                             }
                             Spacer(modifier = Modifier.width(16.dp))
@@ -282,7 +284,7 @@ fun AdminComplaintDetailScreen(
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                             ) {
-                                Text("Open Chat")
+                                Text(stringResource(R.string.open_chat))
                             }
                         }
                     }
@@ -300,7 +302,7 @@ fun AdminComplaintDetailScreen(
                             .padding(24.dp)
                     ) {
                         Column {
-                            Text("Reporter Details", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.reporter_details), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.height(16.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Box(
@@ -332,7 +334,7 @@ fun AdminComplaintDetailScreen(
                         .padding(24.dp)
                 ) {
                     Column {
-                        Text("Issue Description", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.issue_description), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(complaint.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, lineHeight = MaterialTheme.typography.bodyLarge.lineHeight)
                     }
@@ -349,12 +351,12 @@ fun AdminComplaintDetailScreen(
                         .padding(24.dp)
                 ) {
                     Column {
-                        Text("Resolution Proof", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.resolution_proof), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(16.dp))
                         if (!complaint.afterImageUrl.isNullOrBlank()) {
                             Image(
                                 painter = rememberAsyncImagePainter(complaint.afterImageUrl),
-                                contentDescription = "After Image",
+                                contentDescription = stringResource(R.string.after_image),
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -370,7 +372,7 @@ fun AdminComplaintDetailScreen(
                             ) {
                                 Icon(Icons.Default.Upload, contentDescription = null)
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Upload Resolution Image")
+                                Text(stringResource(R.string.upload_resolution_image))
                             }
                         }
                     }

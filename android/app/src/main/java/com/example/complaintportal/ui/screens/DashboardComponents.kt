@@ -38,6 +38,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.complaintportal.R
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 
 
 @Composable
@@ -122,6 +124,7 @@ fun ComplaintCard(
 ) {
     val sharedTransitionScope = com.example.complaintportal.ui.navigation.LocalSharedTransitionScope.current
     val animatedVisibilityScope = com.example.complaintportal.ui.navigation.LocalNavAnimatedVisibilityScope.current
+    val context = LocalContext.current
 
     Card(
         modifier = Modifier
@@ -156,7 +159,7 @@ fun ComplaintCard(
 
                     Image(
                         painter = rememberAsyncImagePainter(complaint.beforeImageUrl),
-                        contentDescription = "Complaint Image",
+                        contentDescription = stringResource(R.string.complaint_image),
                         contentScale = ContentScale.Crop,
                         modifier = imageModifier
                     )
@@ -212,7 +215,7 @@ fun ComplaintCard(
                     Column {
                         if (showCommunityFeatures) {
                             Text(
-                                text = "Citizen in ${complaint.city.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}",
+                                text = stringResource(R.string.citizen_in, complaint.city.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary.copy(alpha=0.7f),
@@ -275,7 +278,7 @@ fun ComplaintCard(
                                         )
                                         Spacer(modifier = Modifier.width(2.dp))
                                         Text(
-                                            text = "${(100..900).random()}m away",
+                                            text = stringResource(R.string.m_away, (100..900).random()),
                                             style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
                                             fontWeight = FontWeight.ExtraBold,
                                             color = androidx.compose.ui.graphics.Color(0xFF7ECFC0)
@@ -284,26 +287,24 @@ fun ComplaintCard(
                             }
                         }
                         
-                        val dateDisplay = remember(complaint.createdAt) {
-                            try {
-                                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-                                val createdDate = sdf.parse(complaint.createdAt!!)
-                                val now = Date()
-                                val diffInMillis = now.time - createdDate!!.time
-                                val diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis)
-                                val diffInHours = TimeUnit.MILLISECONDS.toHours(diffInMillis)
-                                val diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(diffInMillis)
+                        val dateDisplay = try {
+                            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                            val createdDate = sdf.parse(complaint.createdAt!!)
+                            val now = Date()
+                            val diffInMillis = now.time - createdDate!!.time
+                            val diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis)
+                            val diffInHours = TimeUnit.MILLISECONDS.toHours(diffInMillis)
+                            val diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(diffInMillis)
 
-                                when {
-                                    diffInDays > 7 -> SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(createdDate)
-                                    diffInDays >= 1 -> "$diffInDays days ago"
-                                    diffInHours >= 1 -> "$diffInHours hours ago"
-                                    diffInMinutes >= 1 -> "$diffInMinutes mins ago"
-                                    else -> "Just now"
-                                }
-                            } catch (e: Exception) {
-                                complaint.createdAt?.substring(0, 10) ?: "Just now"
+                            when {
+                                diffInDays > 7 -> SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(createdDate)
+                                diffInDays >= 1 -> context.getString(R.string.days_ago, diffInDays)
+                                diffInHours >= 1 -> context.getString(R.string.hours_ago, diffInHours)
+                                diffInMinutes >= 1 -> context.getString(R.string.mins_ago, diffInMinutes)
+                                else -> context.getString(R.string.just_now)
                             }
+                        } catch (e: Exception) {
+                            complaint.createdAt?.substring(0, 10) ?: context.getString(R.string.just_now)
                         }
 
                         Row(
@@ -381,7 +382,7 @@ fun CustomPullToRefreshIndicator(
     ) {
         Icon(
             imageVector = Icons.Default.Settings,
-            contentDescription = "Refreshing",
+            contentDescription = stringResource(R.string.refreshing),
             tint = color,
             modifier = Modifier
                 .size(36.dp)
@@ -472,7 +473,7 @@ fun PriorityUpvoteButton(
     ) {
         Icon(
             imageVector = Icons.Rounded.KeyboardArrowUp,
-            contentDescription = "Upvote",
+            contentDescription = stringResource(R.string.upvote),
             tint = if (isSupported) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(20.dp)
         )
@@ -516,7 +517,7 @@ fun ZoomableImageDialog(imageUrl: String, onDismiss: () -> Unit) {
         ) {
             Image(
                 painter = rememberAsyncImagePainter(imageUrl),
-                contentDescription = "Zoomed Image",
+                contentDescription = stringResource(R.string.zoomed_image),
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable(enabled = false) {},
@@ -531,7 +532,7 @@ fun ZoomableImageDialog(imageUrl: String, onDismiss: () -> Unit) {
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
+                    contentDescription = stringResource(R.string.close),
                     tint = Color.White
                 )
             }

@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -30,9 +31,10 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.ui.graphics.Color
 import com.example.complaintportal.ui.viewmodel.ComplaintViewModel
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +42,7 @@ fun AdminDashboardScreen(
     viewModel: ComplaintViewModel,
     userId: String,
     onNavigateToDetail: (String) -> Unit,
-    onNavigateToAnalytics: () -> Unit
+    onNavigateToAnalytics: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
@@ -125,7 +127,7 @@ fun AdminDashboardScreen(
                     activeCount   = state.inProgressComplaints.size,
                     resolvedCount = state.resolvedComplaints.size,
                 )
-
+2
                 Spacer(modifier = Modifier.height(2.dp))
                 
                 Row(
@@ -151,7 +153,7 @@ fun AdminDashboardScreen(
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Box(modifier = Modifier.weight(1f)) {
                                     if (searchQuery.isEmpty()) {
-                                        Text("Search...", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.outline)
+                                        Text(stringResource(R.string.search_1), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.outline)
                                     }
                                     innerTextField()
                                 }
@@ -164,37 +166,98 @@ fun AdminDashboardScreen(
                         }
                     )
 
-                    IconButton(
+                    Surface(
                         onClick = { showSortMenu = true },
-                        modifier = Modifier
-                            .size(46.dp)
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), CircleShape)
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surface,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                        shadowElevation = 2.dp,
+                        modifier = Modifier.size(46.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Sort,
-                            contentDescription = "Sort",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(20.dp)
-                        )
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Rounded.FilterList,
+                                contentDescription = stringResource(R.string.filter_sort),
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                         DropdownMenu(
                             expanded = showSortMenu,
-                            onDismissRequest = { showSortMenu = false }
+                            onDismissRequest = { showSortMenu = false },
+                            shape = RoundedCornerShape(16.dp),
+                            shadowElevation = 8.dp,
+                            tonalElevation = 8.dp,
+                            modifier = Modifier.width(220.dp).background(MaterialTheme.colorScheme.surface)
                         ) {
+                            Text(
+                                "Sort & Filter",
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+                            
                             DropdownMenuItem(
-                                text = { Text("Newest First") },
-                                onClick = { sortOption = SortOption.DATE_DESC; showSortMenu = false }
+                                text = { 
+                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                        Text(stringResource(R.string.newest_first), fontWeight = if (sortOption == SortOption.DATE_DESC) FontWeight.Bold else FontWeight.Medium)
+                                        if (sortOption == SortOption.DATE_DESC) {
+                                            Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                        }
+                                    }
+                                },
+                                onClick = { sortOption = SortOption.DATE_DESC; showSortMenu = false },
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(if (sortOption == SortOption.DATE_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
                             )
                             DropdownMenuItem(
-                                text = { Text("Oldest First") },
-                                onClick = { sortOption = SortOption.DATE_ASC; showSortMenu = false }
+                                text = { 
+                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                        Text(stringResource(R.string.oldest_first), fontWeight = if (sortOption == SortOption.DATE_ASC) FontWeight.Bold else FontWeight.Medium)
+                                        if (sortOption == SortOption.DATE_ASC) {
+                                            Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                        }
+                                    }
+                                },
+                                onClick = { sortOption = SortOption.DATE_ASC; showSortMenu = false },
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(if (sortOption == SortOption.DATE_ASC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
                             )
                             DropdownMenuItem(
-                                text = { Text("Highest Rating") },
-                                onClick = { sortOption = SortOption.RATING_DESC; showSortMenu = false }
+                                text = { 
+                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                        Text(stringResource(R.string.highest_rating), fontWeight = if (sortOption == SortOption.RATING_DESC) FontWeight.Bold else FontWeight.Medium)
+                                        if (sortOption == SortOption.RATING_DESC) {
+                                            Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                        }
+                                    }
+                                },
+                                onClick = { sortOption = SortOption.RATING_DESC; showSortMenu = false },
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(if (sortOption == SortOption.RATING_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
                             )
                             DropdownMenuItem(
-                                text = { Text("Most Upvotes") },
-                                onClick = { sortOption = SortOption.UPVOTES_DESC; showSortMenu = false }
+                                text = { 
+                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                        Text(stringResource(R.string.most_upvotes), fontWeight = if (sortOption == SortOption.UPVOTES_DESC) FontWeight.Bold else FontWeight.Medium)
+                                        if (sortOption == SortOption.UPVOTES_DESC) {
+                                            Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                        }
+                                    }
+                                },
+                                onClick = { sortOption = SortOption.UPVOTES_DESC; showSortMenu = false },
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(if (sortOption == SortOption.UPVOTES_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
                             )
                         }
                     }
@@ -288,66 +351,27 @@ fun AdminDashboardScreen(
                     modifier = Modifier.weight(1f)
                 ) { page ->
                     if (page == 3) {
+                        val allComplaints = state.newComplaints + state.inProgressComplaints + state.resolvedComplaints
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
+                                .padding(horizontal = 16.dp)
+                                .verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.spacedBy(24.dp)
                         ) {
-                            // Use the new KPI summary or a simplified version here
-                            // For now, let's keep the charts but make the navigation to the "New Analysis Page" much more obvious
-                            
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
-                                    .clickable { onNavigateToAnalytics() }
-                                    .padding(24.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Icon(
-                                        Icons.Default.Analytics, 
-                                        contentDescription = null, 
-                                        modifier = Modifier.size(48.dp),
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                    Spacer(Modifier.height(12.dp))
-                                    Text(
-                                        "Open Detailed Analytics", 
-                                        style = MaterialTheme.typography.titleLarge,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-                                    Text(
-                                        "Resolution rates, trends, and hotspots",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-                            
-                            Text("Quick Summary", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
                             Spacer(modifier = Modifier.height(8.dp))
+                            Text(stringResource(R.string.complaints_by_status), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                             StatusBarChart(state.newComplaints.size, state.inProgressComplaints.size, state.resolvedComplaints.size)
                             
-                            Spacer(modifier = Modifier.height(24.dp))
-                            
-                            Button(
-                                onClick = onNavigateToAnalytics,
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                                shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A3A6E))
-                            ) {
-                                Icon(Icons.Default.Launch, contentDescription = null)
-                                Spacer(Modifier.width(8.dp))
-                                Text("Launch Full Analytics Page")
+                            Text(stringResource(R.string.complaints_by_category), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            if (allComplaints.isNotEmpty()) {
+                                CategoryPieChart(allComplaints)
+                            } else {
+                                Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
+                                    Text(stringResource(R.string.no_data_for_pie_chart), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
                             }
-                            
-                            Spacer(modifier = Modifier.height(32.dp))
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
                     } else {
                         val list = when (page) {
@@ -397,7 +421,7 @@ fun AdminDashboardScreen(
                                 if (filteredList.isEmpty() && !state.isLoading) {
                                     item {
                                         Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
-                                            Text("No pending issues found.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                            Text(stringResource(R.string.no_pending_issues_found), color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         }
                                     }
                                 } else {

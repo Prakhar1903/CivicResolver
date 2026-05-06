@@ -69,6 +69,8 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Locale
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.animation.ExperimentalSharedTransitionApi::class)
 @Composable
@@ -297,10 +299,10 @@ fun CreateComplaintScreen(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopAppBar(
-                    title = { Text("CivicResolve", fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.primary) },
+                    title = { Text(stringResource(R.string.civicresolve), fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.primary) },
                     navigationIcon = {
                         IconButton(onClick = onNavigateBack) {
-                            Icon(Icons.Default.Close, contentDescription = "Close", tint = MaterialTheme.colorScheme.onSurface)
+                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.close), tint = MaterialTheme.colorScheme.onSurface)
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -371,7 +373,7 @@ fun CreateComplaintScreen(
                         if (state.isLoading) {
                             CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White, strokeWidth = 2.dp)
                         } else {
-                            Text("Submit Report", fontWeight = FontWeight.ExtraBold, style = MaterialTheme.typography.titleMedium)
+                            Text(stringResource(R.string.submit_report), fontWeight = FontWeight.ExtraBold, style = MaterialTheme.typography.titleMedium)
                         }
                     }
                 }
@@ -387,8 +389,8 @@ fun CreateComplaintScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                    Text("New Request", style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.onSurface)
-                    Text("Help your community by reporting local issues.", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
+                    Text(stringResource(R.string.new_request), style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.onSurface)
+                    Text(stringResource(R.string.help_your_community_by_reporting_local_issues), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
                 }
                 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -411,7 +413,7 @@ fun CreateComplaintScreen(
                         ) {
                             Icon(Icons.Rounded.CloudUpload, contentDescription = null, tint = MaterialTheme.colorScheme.primary.copy(alpha=0.4f), modifier = Modifier.size(48.dp))
                             Spacer(modifier = Modifier.height(12.dp))
-                            Text("Show us the issue", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                            Text(stringResource(R.string.show_us_the_issue), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                             Spacer(modifier = Modifier.height(24.dp))
                             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                                 HeroActionButton(
@@ -442,7 +444,7 @@ fun CreateComplaintScreen(
                         Box(modifier = Modifier.fillMaxSize()) {
                             Image(
                                 painter = rememberAsyncImagePainter(selectedImageUri),
-                                contentDescription = "Evidence Preview",
+                                contentDescription = stringResource(R.string.evidence_preview),
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
@@ -457,7 +459,7 @@ fun CreateComplaintScreen(
                             ) {
                                 Icon(Icons.Default.Refresh, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Retake Photo", color = Color.White, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+                                Text(stringResource(R.string.retake_photo), color = Color.White, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -467,14 +469,14 @@ fun CreateComplaintScreen(
 
                 // Dynamic Description Field
                 Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                    Text("DESCRIPTION", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                    Text(stringResource(R.string.description), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                     OutlinedTextField(
                         value = description,
                         onValueChange = { if (it.length <= 500) description = it },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 10.dp),
-                        placeholder = { Text("What's happening?") },
+                        placeholder = { Text(stringResource(R.string.what_s_happening)) },
                         minLines = 1,
                         maxLines = 8,
                         trailingIcon = {
@@ -489,7 +491,7 @@ fun CreateComplaintScreen(
                             ) {
                                 Icon(
                                     Icons.Default.Mic, 
-                                    contentDescription = "Voice Input", 
+                                    contentDescription = stringResource(R.string.voice_input), 
                                     tint = if (isVoiceActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -510,7 +512,7 @@ fun CreateComplaintScreen(
                 // Smart Location Card
                 Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text("LOCATION", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                        Text(stringResource(R.string.location), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                         val readableAddress = listOf(landmark, city).filter { it.isNotBlank() }.joinToString(", ")
                         if (readableAddress.isNotBlank()) {
                             Text("Detecting: $readableAddress", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.SemiBold)
@@ -598,7 +600,7 @@ fun CreateComplaintScreen(
                             tonalElevation = 6.dp,
                             shadowElevation = 4.dp
                         ) {
-                            Icon(Icons.Default.GpsFixed, contentDescription = "Recenter", tint = Color.White, modifier = Modifier.padding(12.dp).size(22.dp))
+                            Icon(Icons.Default.GpsFixed, contentDescription = stringResource(R.string.recenter), tint = Color.White, modifier = Modifier.padding(12.dp).size(22.dp))
                         }
                         
                         Surface(
@@ -608,7 +610,7 @@ fun CreateComplaintScreen(
                             shape = RoundedCornerShape(12.dp),
                             color = Color.Black.copy(alpha=0.6f)
                         ) {
-                            Text("Drag map to adjust pin", color = Color.White, fontSize = 10.sp, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
+                            Text(stringResource(R.string.drag_map_to_adjust_pin), color = Color.White, fontSize = 10.sp, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
                         }
                     }
                 }
@@ -690,7 +692,7 @@ fun CreateComplaintScreen(
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Icon(Icons.Default.Home, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    Text("Home", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(stringResource(R.string.home), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                     Text(
                                         authState.detectedDistrict ?: "Unknown",
                                         style = MaterialTheme.typography.labelMedium,
@@ -704,7 +706,7 @@ fun CreateComplaintScreen(
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Icon(Icons.Default.LocationOn, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(20.dp))
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    Text("You are here", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(stringResource(R.string.you_are_here), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                     Text(
                                         currentCity,
                                         style = MaterialTheme.typography.labelMedium,

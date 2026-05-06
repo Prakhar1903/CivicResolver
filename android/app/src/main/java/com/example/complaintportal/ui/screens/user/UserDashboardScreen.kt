@@ -18,7 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.rounded.Tune
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -41,6 +41,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.example.complaintportal.R
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.animation.ExperimentalSharedTransitionApi::class)
 @Composable
@@ -183,7 +185,7 @@ fun UserDashboardScreen(
                 containerColor = Color(0xFF1A3A6E),
                 contentColor = Color.White
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Create Complaint", modifier = Modifier.size(28.dp))
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.create_complaint), modifier = Modifier.size(28.dp))
             }
         }
     ) { padding ->
@@ -215,9 +217,9 @@ fun UserDashboardScreen(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Hi, ", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(stringResource(R.string.hi), style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             Text(displayUserName, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.ExtraBold)
-                            Text(" 👋", style = MaterialTheme.typography.headlineSmall)
+                            Text(stringResource(R.string.str), style = MaterialTheme.typography.headlineSmall)
                         }
                         if (district != null) {
                             val annotatedString = buildAnnotatedString {
@@ -275,9 +277,9 @@ fun UserDashboardScreen(
                                     fontWeight = FontWeight.Bold, 
                                     color = MaterialTheme.colorScheme.primary
                                 )
-                                Text("Your community is improving.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(stringResource(R.string.your_community_is_improving), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
-                            Icon(Icons.Default.ChevronRight, contentDescription = "Analytics", tint = MaterialTheme.colorScheme.primary.copy(alpha=0.4f))
+                            Icon(Icons.Default.ChevronRight, contentDescription = stringResource(R.string.analytics), tint = MaterialTheme.colorScheme.primary.copy(alpha=0.4f))
                         }
                     }
                 }
@@ -308,7 +310,7 @@ fun UserDashboardScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Search,
-                                contentDescription = "Search",
+                                contentDescription = stringResource(R.string.search),
                                 tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
                                 modifier = Modifier.size(20.dp)
                             )
@@ -327,19 +329,22 @@ fun UserDashboardScreen(
                     }
                 )
 
-                IconButton(
+                Surface(
                     onClick = { showSortMenu = true },
-                    modifier = Modifier
-                        .size(46.dp)
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f), CircleShape)
-                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), CircleShape)
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surface,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                    shadowElevation = 2.dp,
+                    modifier = Modifier.size(46.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Tune,
-                        contentDescription = "Sort / Filter",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(22.dp)
-                    )
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Rounded.FilterList,
+                            contentDescription = stringResource(R.string.filter_sort),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                     DropdownMenu(
                         expanded = showSortMenu,
                         onDismissRequest = { showSortMenu = false },
@@ -349,32 +354,73 @@ fun UserDashboardScreen(
                         modifier = Modifier.width(220.dp).background(MaterialTheme.colorScheme.surface)
                     ) {
                         Text(
-                            "Sort By",
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                            style = MaterialTheme.typography.labelMedium,
+                            "Sort & Filter",
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
-                        HorizontalDivider(modifier = Modifier.padding(bottom = 4.dp))
+                        HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
                         
                         DropdownMenuItem(
-                            text = { Text("Newest First", fontWeight = if (sortOption == SortOption.DATE_DESC) FontWeight.Bold else FontWeight.Normal) },
-                            leadingIcon = { Icon(Icons.Default.AccessTime, contentDescription = null, tint = if (sortOption == SortOption.DATE_DESC) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant) },
-                            onClick = { sortOption = SortOption.DATE_DESC; showSortMenu = false }
+                            text = { 
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                    Text(stringResource(R.string.newest_first), fontWeight = if (sortOption == SortOption.DATE_DESC) FontWeight.Bold else FontWeight.Medium)
+                                    if (sortOption == SortOption.DATE_DESC) {
+                                        Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                    }
+                                }
+                            },
+                            onClick = { sortOption = SortOption.DATE_DESC; showSortMenu = false },
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (sortOption == SortOption.DATE_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent)
                         )
                         DropdownMenuItem(
-                            text = { Text("Oldest First", fontWeight = if (sortOption == SortOption.DATE_ASC) FontWeight.Bold else FontWeight.Normal) },
-                            leadingIcon = { Icon(Icons.Default.History, contentDescription = null, tint = if (sortOption == SortOption.DATE_ASC) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant) },
-                            onClick = { sortOption = SortOption.DATE_ASC; showSortMenu = false }
+                            text = { 
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                    Text(stringResource(R.string.oldest_first), fontWeight = if (sortOption == SortOption.DATE_ASC) FontWeight.Bold else FontWeight.Medium)
+                                    if (sortOption == SortOption.DATE_ASC) {
+                                        Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                    }
+                                }
+                            },
+                            onClick = { sortOption = SortOption.DATE_ASC; showSortMenu = false },
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (sortOption == SortOption.DATE_ASC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent)
                         )
                         DropdownMenuItem(
-                            text = { Text("Highest Rated", fontWeight = if (sortOption == SortOption.RATING_DESC) FontWeight.Bold else FontWeight.Normal) },
-                            leadingIcon = { Icon(Icons.Default.Star, contentDescription = null, tint = if (sortOption == SortOption.RATING_DESC) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant) },
-                            onClick = { sortOption = SortOption.RATING_DESC; showSortMenu = false }
+                            text = { 
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                    Text(stringResource(R.string.highest_rated), fontWeight = if (sortOption == SortOption.RATING_DESC) FontWeight.Bold else FontWeight.Medium)
+                                    if (sortOption == SortOption.RATING_DESC) {
+                                        Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                    }
+                                }
+                            },
+                            onClick = { sortOption = SortOption.RATING_DESC; showSortMenu = false },
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (sortOption == SortOption.RATING_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent)
                         )
                         DropdownMenuItem(
-                            text = { Text("Most Upvotes", fontWeight = if (sortOption == SortOption.UPVOTES_DESC) FontWeight.Bold else FontWeight.Normal) },
-                            leadingIcon = { Icon(Icons.Default.ThumbUp, contentDescription = null, tint = if (sortOption == SortOption.UPVOTES_DESC) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant) },
-                            onClick = { sortOption = SortOption.UPVOTES_DESC; showSortMenu = false }
+                            text = { 
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                    Text(stringResource(R.string.most_upvotes), fontWeight = if (sortOption == SortOption.UPVOTES_DESC) FontWeight.Bold else FontWeight.Medium)
+                                    if (sortOption == SortOption.UPVOTES_DESC) {
+                                        Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                    }
+                                }
+                            },
+                            onClick = { sortOption = SortOption.UPVOTES_DESC; showSortMenu = false },
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (sortOption == SortOption.UPVOTES_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent)
                         )
                     }
                 }
@@ -418,7 +464,7 @@ fun UserDashboardScreen(
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         selectedTab = 0 
                     },
-                    text = { Text("My Reports", style = MaterialTheme.typography.titleSmall, fontWeight = if (selectedTab == 0) FontWeight.Bold else FontWeight.Medium) }
+                    text = { Text(stringResource(R.string.my_reports), style = MaterialTheme.typography.titleSmall, fontWeight = if (selectedTab == 0) FontWeight.Bold else FontWeight.Medium) }
                 )
                 Tab(
                     selected = selectedTab == 1,
@@ -426,7 +472,7 @@ fun UserDashboardScreen(
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         selectedTab = 1 
                     },
-                    text = { Text("Community Hub", style = MaterialTheme.typography.titleSmall, fontWeight = if (selectedTab == 1) FontWeight.Bold else FontWeight.Medium) }
+                    text = { Text(stringResource(R.string.community_hub), style = MaterialTheme.typography.titleSmall, fontWeight = if (selectedTab == 1) FontWeight.Bold else FontWeight.Medium) }
                 )
             }
 
@@ -523,15 +569,15 @@ fun UserDashboardScreen(
                             verticalArrangement = Arrangement.spacedBy(24.dp)
                         ) {
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Complaints by Status", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.complaints_by_status), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                             StatusBarChart(state.newComplaints.size, state.inProgressComplaints.size, state.resolvedComplaints.size)
                             
-                            Text("Complaints by Category", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.complaints_by_category), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                             if (allComplaints.isNotEmpty()) {
                                 CategoryPieChart(allComplaints)
                             } else {
                                 Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
-                                    Text("No data for pie chart", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(stringResource(R.string.no_data_for_pie_chart), color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                             }
                             Spacer(modifier = Modifier.height(16.dp))
@@ -676,7 +722,7 @@ fun UserDashboardScreen(
                                                     Icon(Icons.Default.Description, contentDescription = null, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.primary)
                                                 }
                                                 Spacer(modifier = Modifier.height(24.dp))
-                                                Text("You're all caught up!", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                                                Text(stringResource(R.string.you_re_all_caught_up), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                                                 Text(
                                                     "Everything looks good in your area! Tap + to report a new issue and help your community.", 
                                                     style = MaterialTheme.typography.bodyMedium, 
@@ -689,7 +735,7 @@ fun UserDashboardScreen(
                                                     onClick = onNavigateToCreate,
                                                     shape = RoundedCornerShape(12.dp)
                                                 ) {
-                                                    Text("Report an Issue")
+                                                    Text(stringResource(R.string.report_an_issue))
                                                 }
                                             }
                                         }

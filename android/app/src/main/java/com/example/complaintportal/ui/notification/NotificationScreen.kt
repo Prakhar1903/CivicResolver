@@ -28,6 +28,10 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import android.content.Context
+import com.example.complaintportal.R
 
 // ── Theme colors (matched to app's NavyPrimary/TealAccent palette) ────────────
 private val NavyPrimary @Composable get() = MaterialTheme.colorScheme.primary
@@ -71,7 +75,7 @@ fun NotificationBell(
 
         Icon(
             imageVector        = Icons.Default.Notifications,
-            contentDescription = "Notifications",
+            contentDescription = stringResource(R.string.notifications),
             tint               = NavyPrimary,
             modifier           = Modifier.size(22.dp).offset(x = shake.value.dp),
         )
@@ -120,17 +124,17 @@ fun NotificationScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Notifications", fontWeight = FontWeight.SemiBold, color = TextPrimary)
+                    Text(stringResource(R.string.notifications), fontWeight = FontWeight.SemiBold, color = TextPrimary)
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = NavyPrimary)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back), tint = NavyPrimary)
                     }
                 },
                 actions = {
                     if (uiState.notifications.isNotEmpty()) {
                         TextButton(onClick = { viewModel.clearAll() }) {
-                            Text("Clear all", color = Color(0xFFE53935), fontSize = 13.sp)
+                            Text(stringResource(R.string.clear_all), color = Color(0xFFE53935), fontSize = 13.sp)
                         }
                     }
                 },
@@ -172,6 +176,7 @@ fun NotificationScreen(
 // ── Individual card ───────────────────────────────────────────────────────────
 @Composable
 private fun NotificationCard(notification: NotificationItem, onClick: () -> Unit) {
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -202,7 +207,7 @@ private fun NotificationCard(notification: NotificationItem, onClick: () -> Unit
                     color      = TextPrimary,
                     modifier   = Modifier.weight(1f),
                 )
-                Text(notification.timeAgo(), fontSize = 11.sp, color = TextSecond)
+                Text(notification.timeAgo(context), fontSize = 11.sp, color = TextSecond)
             }
             Spacer(Modifier.height(2.dp))
             Text(
@@ -235,10 +240,10 @@ private fun EmptyNotifications(modifier: Modifier = Modifier) {
             Icon(Icons.Default.NotificationsNone, contentDescription = null, tint = NavyPrimary, modifier = Modifier.size(36.dp))
         }
         Spacer(Modifier.height(16.dp))
-        Text("You're all caught up!", fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = TextPrimary)
+        Text(stringResource(R.string.you_re_all_caught_up), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = TextPrimary)
         Spacer(Modifier.height(6.dp))
         Text(
-            text       = "Notifications about your reports\nwill appear here.",
+            text       = stringResource(R.string.notifications_empty_subtitle),
             fontSize   = 13.sp,
             color      = TextSecond,
             textAlign  = TextAlign.Center,
@@ -264,17 +269,17 @@ private fun NotificationItem.iconBgColor(): Color = when (type) {
     else              -> Color(0xFF6A7F9A)
 }
 
-private fun NotificationItem.timeAgo(): String = try {
+private fun NotificationItem.timeAgo(context: Context): String = try {
     val instant = Instant.parse(createdAt)
     val now     = Instant.now()
     val mins    = ChronoUnit.MINUTES.between(instant, now)
     val hours   = ChronoUnit.HOURS.between(instant, now)
     val days    = ChronoUnit.DAYS.between(instant, now)
     when {
-        mins  < 1  -> "Just now"
-        mins  < 60 -> "${mins}m ago"
-        hours < 24 -> "${hours}h ago"
-        days  < 7  -> "${days}d ago"
+        mins  < 1  -> context.getString(R.string.just_now)
+        mins  < 60 -> context.getString(R.string.mins_ago_short, mins)
+        hours < 24 -> context.getString(R.string.hours_ago_short, hours)
+        days  < 7  -> context.getString(R.string.days_ago_short, days)
         else       -> DateTimeFormatter.ofPattern("MMM d").withZone(ZoneId.systemDefault()).format(instant)
     }
 } catch (_: Exception) { "" }
