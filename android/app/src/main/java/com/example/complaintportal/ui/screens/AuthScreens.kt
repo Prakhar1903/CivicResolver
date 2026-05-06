@@ -467,7 +467,7 @@ fun SignupScreen(
         }
     }
 
-    AuthBackground(imageModel = "https://images.unsplash.com/photo-1441974231531-c6227db76b6e") {
+    AuthBackground(imageModel = R.drawable.signup_bg) {
         // FIXED HEADER
         FixedHeaderContent()
 
