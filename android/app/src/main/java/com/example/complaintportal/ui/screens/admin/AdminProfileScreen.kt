@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -213,21 +214,6 @@ fun AdminProfileScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            // ── Performance stats ─────────────────────────────────────────────
-            AnimatedVisibility(
-                visible = statsVisible,
-                enter   = fadeIn(tween(600)) + slideInVertically(tween(600)) { fullHeight -> fullHeight / 2 },
-            ) {
-                AdminStatsSection(
-                    totalAssigned     = profile.totalAssigned,
-                    resolvedCount     = profile.resolvedCount,
-                    pendingCount      = profile.pendingCount,
-                    avgResolutionDays = profile.avgResolutionDays,
-                )
-            }
-
-            Spacer(Modifier.height(20.dp))
-
             // ── Admin info ────────────────────────────────────────────────────
             ProfileSection(title = stringResource(R.string.admin_info)) {
                 InfoRow(icon = Icons.Outlined.Person,         label = stringResource(R.string.full_name),    value = profile.name)
@@ -263,13 +249,6 @@ fun AdminProfileScreen(
             // ── Admin actions ─────────────────────────────────────────────────
             ProfileSection(title = stringResource(R.string.admin_actions)) {
                 ActionRow(
-                    icon    = Icons.Outlined.People,
-                    label   = stringResource(R.string.manage_users),
-                    enabled = profile.canManageUsers,
-                    onClick = onManageUsers,
-                )
-                SectionDivider()
-                ActionRow(
                     icon    = Icons.Outlined.Description,
                     label   = stringResource(R.string.all_complaints),
                     badge   = profile.totalAssigned.toString(),
@@ -281,19 +260,6 @@ fun AdminProfileScreen(
                     label   = stringResource(R.string.export_reports),
                     enabled = profile.canExportReports,
                     onClick = onExportReports,
-                )
-                SectionDivider()
-                ActionRow(
-                    icon    = Icons.Outlined.Campaign,
-                    label   = stringResource(R.string.broadcast_message),
-                    enabled = profile.canBroadcast,
-                    onClick = onBroadcastMessage,
-                )
-                SectionDivider()
-                ActionRow(
-                    icon    = Icons.Outlined.History,
-                    label   = stringResource(R.string.activity_log),
-                    onClick = onActivityLog,
                 )
             }
 
@@ -346,16 +312,6 @@ fun AdminProfileScreen(
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
-
-            // ── Security ──────────────────────────────────────────────────────
-            ProfileSection(title = stringResource(R.string.security)) {
-                ActionRow(
-                    icon    = Icons.Outlined.Lock,
-                    label   = stringResource(R.string.change_password),
-                    onClick = onChangePassword,
-                )
-            }
 
             Spacer(Modifier.height(20.dp))
 
@@ -533,88 +489,6 @@ private fun AdminAvatarSection(
     }
 }
 
-// ── Admin Stats ───────────────────────────────────────────────────────────────
-@Composable
-private fun AdminStatsSection(
-    totalAssigned:     Int,
-    resolvedCount:     Int,
-    pendingCount:      Int,
-    avgResolutionDays: Int,
-) {
-    // Resolution rate percentage
-    val resolutionRate = if (totalAssigned > 0)
-        (resolvedCount * 100f / totalAssigned).toInt() else 0
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-        // Top row — 3 stats
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(CardWhite)
-                .padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            AdminStatItem(value = totalAssigned, label = stringResource(R.string.assigned),  color = NavyPrimary,   icon = "📋")
-            StatDivider()
-            AdminStatItem(value = resolvedCount, label = stringResource(R.string.resolved),  color = GreenResolved, icon = "✅")
-            StatDivider()
-            AdminStatItem(value = pendingCount,  label = stringResource(R.string.pending),   color = AmberActive,   icon = "⏳")
-        }
-
-        // Resolution rate card
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(NavyPrimary)
-                .padding(horizontal = 20.dp, vertical = 14.dp),
-            verticalAlignment   = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Column {
-                Text(stringResource(R.string.resolution_rate), fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f))
-                Spacer(Modifier.height(2.dp))
-                Row(verticalAlignment = Alignment.Bottom) {
-                    val animatedRate by animateIntAsState(
-                        targetValue   = resolutionRate,
-                        animationSpec = tween(1000, easing = EaseOutCubic),
-                        label         = "rate",
-                    )
-                    Text(
-                        "$animatedRate%",
-                        fontSize   = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color      = TealAccent,
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(R.string.of_issues_resolved), fontSize = 11.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f), modifier = Modifier.padding(bottom = 4.dp))
-                }
-            }
-
-            Column(horizontalAlignment = Alignment.End) {
-                Text(stringResource(R.string.avg_resolution), fontSize = 11.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f))
-                Spacer(Modifier.height(2.dp))
-                val animatedDays by animateIntAsState(
-                    targetValue   = avgResolutionDays,
-                    animationSpec = tween(800, easing = EaseOutCubic),
-                    label         = "days",
-                )
-                Text(
-                    "$animatedDays days",
-                    fontSize   = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color      = GoldAccent,
-                )
-            }
-        }
-    }
-}
 
 @Composable
 private fun AdminStatItem(value: Int, label: String, color: Color, icon: String) {
