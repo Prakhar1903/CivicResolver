@@ -43,14 +43,13 @@ fun AdminDashboardScreen(
     viewModel: ComplaintViewModel,
     userId: String,
     onNavigateToDetail: (String) -> Unit,
-    onNavigateToAnalytics: () -> Unit = {}
+    onNavigateToAnalytics: () -> Unit = {},
+    onNavigateToMap: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     var isRefreshing by remember { mutableStateOf(false) }
-    var sortOption by remember { mutableStateOf(SortOption.DATE_DESC) }
     var showSortMenu by remember { mutableStateOf(false) }
-    var isMapView by rememberSaveable { mutableStateOf(false) }
 
     val pagerState = rememberPagerState(pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
@@ -203,79 +202,78 @@ fun AdminDashboardScreen(
                             DropdownMenuItem(
                                 text = { 
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                        Text(stringResource(R.string.newest_first), fontWeight = if (sortOption == SortOption.DATE_DESC) FontWeight.Bold else FontWeight.Medium)
-                                        if (sortOption == SortOption.DATE_DESC) {
+                                        Text(stringResource(R.string.newest_first), fontWeight = if (state.sortOption == SortOption.DATE_DESC) FontWeight.Bold else FontWeight.Medium)
+                                        if (state.sortOption == SortOption.DATE_DESC) {
                                             Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                                         }
                                     }
                                 },
-                                onClick = { sortOption = SortOption.DATE_DESC; showSortMenu = false },
+                                onClick = { viewModel.updateSortOption(SortOption.DATE_DESC); showSortMenu = false },
                                 modifier = Modifier
                                     .padding(horizontal = 8.dp, vertical = 2.dp)
                                     .clip(RoundedCornerShape(10.dp))
-                                    .background(if (sortOption == SortOption.DATE_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
+                                    .background(if (state.sortOption == SortOption.DATE_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
                             )
                             DropdownMenuItem(
                                 text = { 
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                        Text(stringResource(R.string.oldest_first), fontWeight = if (sortOption == SortOption.DATE_ASC) FontWeight.Bold else FontWeight.Medium)
-                                        if (sortOption == SortOption.DATE_ASC) {
+                                        Text(stringResource(R.string.oldest_first), fontWeight = if (state.sortOption == SortOption.DATE_ASC) FontWeight.Bold else FontWeight.Medium)
+                                        if (state.sortOption == SortOption.DATE_ASC) {
                                             Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                                         }
                                     }
                                 },
-                                onClick = { sortOption = SortOption.DATE_ASC; showSortMenu = false },
+                                onClick = { viewModel.updateSortOption(SortOption.DATE_ASC); showSortMenu = false },
                                 modifier = Modifier
                                     .padding(horizontal = 8.dp, vertical = 2.dp)
                                     .clip(RoundedCornerShape(10.dp))
-                                    .background(if (sortOption == SortOption.DATE_ASC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
+                                    .background(if (state.sortOption == SortOption.DATE_ASC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
                             )
                             DropdownMenuItem(
                                 text = { 
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                        Text(stringResource(R.string.highest_rating), fontWeight = if (sortOption == SortOption.RATING_DESC) FontWeight.Bold else FontWeight.Medium)
-                                        if (sortOption == SortOption.RATING_DESC) {
+                                        Text(stringResource(R.string.highest_rating), fontWeight = if (state.sortOption == SortOption.RATING_DESC) FontWeight.Bold else FontWeight.Medium)
+                                        if (state.sortOption == SortOption.RATING_DESC) {
                                             Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                                         }
                                     }
                                 },
-                                onClick = { sortOption = SortOption.RATING_DESC; showSortMenu = false },
+                                onClick = { viewModel.updateSortOption(SortOption.RATING_DESC); showSortMenu = false },
                                 modifier = Modifier
                                     .padding(horizontal = 8.dp, vertical = 2.dp)
                                     .clip(RoundedCornerShape(10.dp))
-                                    .background(if (sortOption == SortOption.RATING_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
+                                    .background(if (state.sortOption == SortOption.RATING_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
                             )
                             DropdownMenuItem(
                                 text = { 
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                        Text(stringResource(R.string.most_upvotes), fontWeight = if (sortOption == SortOption.UPVOTES_DESC) FontWeight.Bold else FontWeight.Medium)
-                                        if (sortOption == SortOption.UPVOTES_DESC) {
+                                        Text(stringResource(R.string.most_upvotes), fontWeight = if (state.sortOption == SortOption.UPVOTES_DESC) FontWeight.Bold else FontWeight.Medium)
+                                        if (state.sortOption == SortOption.UPVOTES_DESC) {
                                             Icon(Icons.Rounded.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                                         }
                                     }
                                 },
-                                onClick = { sortOption = SortOption.UPVOTES_DESC; showSortMenu = false },
+                                onClick = { viewModel.updateSortOption(SortOption.UPVOTES_DESC); showSortMenu = false },
                                 modifier = Modifier
                                     .padding(horizontal = 8.dp, vertical = 2.dp)
                                     .clip(RoundedCornerShape(10.dp))
-                                    .background(if (sortOption == SortOption.UPVOTES_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
+                                    .background(if (state.sortOption == SortOption.UPVOTES_DESC) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else androidx.compose.ui.graphics.Color.Transparent)
                             )
                         }
                     }
 
                     IconButton(
-                        onClick = { isMapView = !isMapView },
+                        onClick = onNavigateToMap,
                         modifier = Modifier
                             .size(46.dp)
                             .background(
-                                if (isMapView) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                                else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                                 CircleShape
                             )
                     ) {
                         Icon(
-                            imageVector = if (isMapView) Icons.Default.FormatListBulleted else Icons.Default.Map,
-                            contentDescription = if (isMapView) "Switch to List" else "Switch to Map",
+                            imageVector = Icons.Default.Map,
+                            contentDescription = "View Map",
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(20.dp)
                         )
@@ -327,30 +325,10 @@ fun AdminDashboardScreen(
                 }
             }
 
-            if (isMapView) {
-                val mapBaseList = state.newComplaints + state.inProgressComplaints + state.resolvedComplaints
-                
-                val mapFilteredList = if (searchQuery.isBlank()) {
-                    mapBaseList
-                } else {
-                    mapBaseList.filter {
-                        it.category.contains(searchQuery, ignoreCase = true) ||
-                        it.city.contains(searchQuery, ignoreCase = true) ||
-                        it.description.contains(searchQuery, ignoreCase = true)
-                    }
-                }
-
-                OsmDashboardMap(
-                    complaints = mapFilteredList,
-                    onComplaintClick = onNavigateToDetail,
-                    scope = MapScope.MY_REPORTS,
-                    modifier = Modifier.weight(1f)
-                )
-            } else {
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.weight(1f)
-                ) { page ->
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f)
+            ) { page ->
                     val list = when (page) {
                             0 -> state.newComplaints
                             1 -> state.inProgressComplaints
@@ -367,12 +345,15 @@ fun AdminDashboardScreen(
                                 it.description.contains(searchQuery, ignoreCase = true)
                             }
                         }.let {
-                            when (sortOption) {
+                            when (state.sortOption) {
                                 SortOption.DATE_DESC -> it.sortedByDescending { item -> item.createdAt }
                                 SortOption.DATE_ASC -> it.sortedBy { item -> item.createdAt }
                                 SortOption.RATING_DESC -> it.sortedByDescending { item -> item.rating }
                                 SortOption.UPVOTES_DESC -> it.sortedByDescending { item -> item.supportCount ?: 0 }
-                                SortOption.NEAREST -> it
+                                SortOption.NEAREST -> {
+                                    // Admin does not have user location by default. Fall back to DATE_DESC or implement haversine distance.
+                                    it.sortedByDescending { item -> item.createdAt }
+                                }
                             }
                         }
 
@@ -421,7 +402,6 @@ fun AdminDashboardScreen(
                             }
                         }
                 }
-            }
         }
     }
 }

@@ -68,7 +68,8 @@ fun UserDashboardScreen(
     notificationViewModel: NotificationViewModel? = null,
     onNavigateToCreate: () -> Unit,
     onNavigateToNotifications: () -> Unit = {},
-    onNavigateToDetail: (String) -> Unit
+    onNavigateToDetail: (String) -> Unit,
+    onNavigateToMap: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
@@ -117,11 +118,9 @@ fun UserDashboardScreen(
     }
     val displayUserName = if (userName.isBlank() || userName == "User") "Himanshu Singh" else userName
     var searchQuery by remember { mutableStateOf("") }
-    var sortOption by remember { mutableStateOf(SortOption.DATE_DESC) }
     var showSortMenu by remember { mutableStateOf(false) }
     var selectedTab by rememberSaveable { mutableIntStateOf(0) } // 0: My Reports, 1: Community Hub
     var communityTabScope by rememberSaveable { mutableIntStateOf(0) } // 0: My District, 1: Global Feed
-    var isMapView by rememberSaveable { mutableStateOf(false) }
     
     val pagerState = rememberPagerState(pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
@@ -435,24 +434,23 @@ fun UserDashboardScreen(
                 )
 
                 SortFilterDropdown(
-                    selectedSort = sortOption,
+                    selectedSort = state.sortOption,
                     activeTab = if (selectedTab == 1 && communityTabScope == 0) 0 else 1,
-                    onSortChanged = { sortOption = it }
+                    onSortChanged = { viewModel.updateSortOption(it) }
                 )
 
                 IconButton(
-                    onClick = { isMapView = !isMapView },
+                    onClick = onNavigateToMap,
                     modifier = Modifier
                         .size(46.dp)
                         .background(
-                            if (isMapView) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                            else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                             CircleShape
                         )
                 ) {
                     Icon(
-                        imageVector = if (isMapView) Icons.Default.FormatListBulleted else Icons.Default.Map,
-                        contentDescription = if (isMapView) "Switch to List" else "Switch to Map",
+                        imageVector = Icons.Default.Map,
+                        contentDescription = "View Map",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
                     )
@@ -491,43 +489,12 @@ fun UserDashboardScreen(
                 )
             }
 
-            if (isMapView) {
-                val mapBaseList = if (selectedTab == 0) {
-                    state.newComplaints + state.inProgressComplaints + state.resolvedComplaints
-                } else {
-                    state.communityComplaints
-                }
-                
-                val mapFilteredList = if (searchQuery.isBlank()) {
-                    mapBaseList
-                } else {
-                    mapBaseList.filter {
-                        it.category.contains(searchQuery, ignoreCase = true) ||
-                        it.city.contains(searchQuery, ignoreCase = true) ||
-                        it.description.contains(searchQuery, ignoreCase = true)
-                    }
-                }
+            val communityFiltered = state.communityComplaints.filter { it.user?.id != userId }
+            val newCount = if (selectedTab == 0) state.newComplaints.size else communityFiltered.count { it.status.lowercase() == "new" }
+            val activeCount = if (selectedTab == 0) state.inProgressComplaints.size else communityFiltered.count { it.status.lowercase() == "in_progress" }
+            val resolvedCount = if (selectedTab == 0) state.resolvedComplaints.size else communityFiltered.count { it.status.lowercase() == "resolved" }
 
-                val mapScope = if (selectedTab == 0) {
-                    MapScope.MY_REPORTS
-                } else if (communityTabScope == 0) {
-                    MapScope.MY_DISTRICT
-                } else {
-                    MapScope.GLOBAL_FEED
-                }
-
-                OsmDashboardMap(
-                    complaints = mapFilteredList,
-                    onComplaintClick = onNavigateToDetail,
-                    scope = mapScope,
-                    modifier = Modifier.weight(1f)
-                )
-            } else {
-                val newCount = if (selectedTab == 0) state.newComplaints.size else state.communityComplaints.count { it.status.lowercase() == "new" }
-                val activeCount = if (selectedTab == 0) state.inProgressComplaints.size else state.communityComplaints.count { it.status.lowercase() == "in_progress" }
-                val resolvedCount = if (selectedTab == 0) state.resolvedComplaints.size else state.communityComplaints.count { it.status.lowercase() == "resolved" }
-
-                LazyRow(
+            LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.padding(bottom = 16.dp, top = 8.dp)
@@ -582,9 +549,6 @@ fun UserDashboardScreen(
                         }
             
             LaunchedEffect(selectedTab, communityTabScope) {
-                if (selectedTab == 1 && communityTabScope == 1 && sortOption == SortOption.NEAREST) {
-                    sortOption = SortOption.DATE_DESC
-                }
                 showAllBeyond = false
             }
                         
@@ -595,7 +559,7 @@ fun UserDashboardScreen(
                                 2 -> "resolved"
                                 else -> "all"
                             }
-                            state.communityComplaints.filter { 
+                            communityFiltered.filter { 
                                 status == "all" || it.status.trim().lowercase() == status.lowercase()
                             }
                         }
@@ -696,7 +660,7 @@ fun UserDashboardScreen(
                                         it.description.contains(searchQuery, ignoreCase = true)
                                     }
                                 }.let { unsorted ->
-                                    when (sortOption) {
+                                    when (state.sortOption) {
                                         SortOption.DATE_DESC -> unsorted.sortedByDescending { it.createdAt }
                                         SortOption.DATE_ASC -> unsorted.sortedBy { it.createdAt }
                                         SortOption.RATING_DESC -> unsorted.sortedByDescending { it.rating }
@@ -720,7 +684,7 @@ fun UserDashboardScreen(
                                     }
                                 }
 
-                                val hiddenBeyondRadius = if (sortOption == SortOption.NEAREST && !showAllBeyond && userLat != null) {
+                                val hiddenBeyondRadius = if (state.sortOption == SortOption.NEAREST && !showAllBeyond && userLat != null) {
                                     displayList.count { complaint ->
                                         val lat = complaint.latitude.toDoubleOrNull() ?: 0.0
                                         val lng = complaint.longitude.toDoubleOrNull() ?: 0.0
@@ -740,6 +704,13 @@ fun UserDashboardScreen(
                                                 horizontalAlignment = Alignment.CenterHorizontally,
                                                 verticalArrangement = Arrangement.Center
                                             ) {
+                                                if (hiddenBeyondRadius > 0) {
+                                                    BeyondRadiusBanner(
+                                                        hiddenCount = hiddenBeyondRadius,
+                                                        onShowAll = { showAllBeyond = true }
+                                                    )
+                                                    Spacer(modifier = Modifier.height(24.dp))
+                                                }
                                                 Box(
                                                     modifier = Modifier.size(120.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer.copy(alpha=0.2f)),
                                                     contentAlignment = Alignment.Center
@@ -804,11 +775,13 @@ fun UserDashboardScreen(
                                             }
                                         }
 
-                                        item {
-                                            BeyondRadiusBanner(
-                                                hiddenCount = hiddenBeyondRadius,
-                                                onShowAll = { showAllBeyond = true }
-                                            )
+                                        if (hiddenBeyondRadius > 0) {
+                                            item {
+                                                BeyondRadiusBanner(
+                                                    hiddenCount = hiddenBeyondRadius,
+                                                    onShowAll = { showAllBeyond = true }
+                                                )
+                                            }
                                         }
 
                                         item {
@@ -846,7 +819,6 @@ fun UserDashboardScreen(
                                 }
                             }
                         }
-                    }
                 }
         }
     }
