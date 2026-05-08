@@ -218,17 +218,13 @@ fun ComplaintCard(
                     Column {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             if (showCommunityFeatures) {
-                                if (currentUserId != null && complaint.user?.id == currentUserId) {
-                                    YouReportedBadge()
-                                } else {
-                                    Text(
-                                        text = stringResource(R.string.citizen_in, complaint.city.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }),
-                                        style = MaterialTheme.typography.labelSmall,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.primary.copy(alpha=0.7f),
-                                        modifier = Modifier.padding(bottom = 2.dp)
-                                    )
-                                }
+                                Text(
+                                    text = stringResource(R.string.citizen_in, complaint.city.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha=0.7f),
+                                    modifier = Modifier.padding(bottom = 2.dp)
+                                )
                             }
                         }
                         Text(
@@ -389,7 +385,7 @@ enum class SortOption(val label: String) {
     DATE_ASC("Oldest First"),
     RATING_DESC("Highest Rated"),
     UPVOTES_DESC("Most Upvotes"),
-    NEAREST("📍 Nearest First")
+    NEAREST("Nearest First")
 }
 
 @Composable
@@ -689,10 +685,7 @@ fun SortFilterDropdown(
             add(SortOption.DATE_ASC)
             add(SortOption.RATING_DESC)
             add(SortOption.UPVOTES_DESC)
-            // Nearest ONLY in My District (0)
-            if (activeTab == 0) {
-                add(SortOption.NEAREST)
-            }
+            add(SortOption.NEAREST)
         }
     }
 
@@ -777,14 +770,6 @@ fun SortFilterDropdown(
                         if (isSelected) Color(0xFF1A3A6E).copy(alpha = 0.05f) else Color.Transparent
                     ),
                 )
-
-                if (option == SortOption.UPVOTES_DESC && activeTab == 0) {
-                    HorizontalDivider(
-                        color     = Color(0xFFE8EDF5),
-                        thickness = 0.5.dp,
-                        modifier  = Modifier.padding(horizontal = 16.dp),
-                    )
-                }
             }
         }
     }
@@ -819,34 +804,6 @@ fun ComplaintDistanceLabel(
             color      = color,
             fontWeight = FontWeight.Medium,
         )
-    }
-}
-
-// ── "You reported this" badge ─────────────────────────────────────────────────
-@Composable
-fun YouReportedBadge(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
-            .background(Color(0xFF7ECFC0).copy(alpha = 0.15f))
-            .border(0.5.dp, Color(0xFF7ECFC0).copy(alpha = 0.4f), RoundedCornerShape(20.dp))
-            .padding(horizontal = 8.dp, vertical = 3.dp),
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(
-                "🏷️",
-                fontSize = 10.sp
-            )
-            Text(
-                "You reported this",
-                fontSize   = 10.sp,
-                color      = Color(0xFF0D6E5A),
-                fontWeight = FontWeight.Medium,
-            )
-        }
     }
 }
 
