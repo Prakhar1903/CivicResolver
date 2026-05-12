@@ -686,11 +686,12 @@ fun SortFilterDropdown(
     // Available options based on active tab
     val availableOptions = remember(activeTab) {
         buildList {
-            add(SortOption.DATE_DESC)
             add(SortOption.DATE_ASC)
             add(SortOption.RATING_DESC)
             add(SortOption.UPVOTES_DESC)
-            add(SortOption.NEAREST)
+            if (activeTab == 0) { // Only show Nearest for Community Hub
+                add(SortOption.NEAREST)
+            }
         }
     }
 
@@ -858,6 +859,33 @@ fun BeyondRadiusBanner(
                 fontSize = 12.sp,
                 color    = Color(0xFF1A3A6E),
                 fontWeight = FontWeight.Medium,
+            )
+        }
+    }
+}
+@Composable
+fun YouReportedBadge() {
+    Surface(
+        color = MaterialTheme.colorScheme.primaryContainer,
+        shape = RoundedCornerShape(4.dp),
+        modifier = Modifier.padding(bottom = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = null,
+                modifier = Modifier.size(10.dp),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "YOU REPORTED",
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }

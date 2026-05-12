@@ -173,6 +173,10 @@ fun UserDashboardScreen(
             viewModel.fetchCommunityFeed(scope, userId)
             viewModel.fetchPublicStats(scope)
         } else {
+            // Reset sort if it was set to NEAREST (not supported in My Reports)
+            if (state.sortOption == SortOption.NEAREST) {
+                viewModel.updateSortOption(SortOption.DATE_DESC)
+            }
             viewModel.fetchUserComplaints(userId) // Added this
             viewModel.fetchPublicStats()
         }
@@ -791,6 +795,7 @@ fun UserDashboardScreen(
                 }
             }
         }
+    }
 }
 @Composable
 fun StatusChip(
