@@ -29,9 +29,10 @@ interface AppContainer {
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
-    override val socketUrl = "http://localhost:4000"
+//    override val socketUrl = "http://localhost:4000"
+    override val socketUrl = "https://nonadjacent-unsurnamed-lizabeth.ngrok-free.dev"
     override val baseUrl = "$socketUrl/api/"
-    //override val socketUrl = "https://nonadjacent-unsurnamed-lizabeth.ngrok-free.dev"
+
     override val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
